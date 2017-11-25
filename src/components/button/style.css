@@ -1,0 +1,21 @@
+.button {
+  width: 100%;
+  background: #ffffff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  color: #f77062;
+  display: block;
+  text-align: center;
+  height: 42px;
+  text-transform: uppercase;
+  line-height: 42px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+a.button {
+  text-decoration: none;
+}
+button.button {
+  border: 0;
+}
