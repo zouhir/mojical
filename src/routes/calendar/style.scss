@@ -1,0 +1,54 @@
+// refactor from CSS to Scss
+
+.calendar {
+  padding: 120px 20px 56px 20px;
+  min-height: 100%;
+  width: 100%;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardContainer {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  box-sizing: content-box;
+  max-width: 700px;
+}
+.mainCard {
+  /* Card Bg: */
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  &:before,
+  &:after {
+    content: "";
+    display: block;
+    height: 96%;
+    top: 2%;
+    position: absolute;
+  }
+  &:before {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    width: 10px;
+    left: -10px;
+  }
+  &:after {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    width: 10px;
+    right: -10px;
+  }
+}
+
+@media (min-width: 720px) {
+  .calendar {
+    padding: 120px 40px 56px 40px;
+  }
+}

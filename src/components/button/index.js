@@ -1,5 +1,5 @@
 import { h } from "preact";
-import style from "./style";
+import style from "./style.scss";
 
 const Button = ({ href, label, value, onClick }) => {
   if (href)

@@ -1,11 +1,10 @@
 import { h, Component } from "preact";
 import { Router } from "preact-router";
 
-import Header from "./header";
 import Home from "../routes/home";
-import Profile from "../routes/profile";
-// import Home from 'async!../routes/home';
-// import Profile from 'async!../routes/profile';
+import Calendar from "async!../routes/calendar";
+
+import { firebaseAuth as auth } from "../lib/firebase";
 
 export default class App extends Component {
   /** Gets fired when the route changes.
@@ -13,6 +12,7 @@ export default class App extends Component {
    *	@param {string} event.url	The newly routed URL
    */
   handleRoute = e => {
+    console.log(auth().currentUser);
     this.currentUrl = e.url;
   };
 
@@ -21,8 +21,7 @@ export default class App extends Component {
       <div id="app">
         <Router onChange={this.handleRoute}>
           <Home path="/" />
-          <Profile path="/profile/" user="me" />
-          <Profile path="/profile/:user" />
+          <Calendar path="/my-calendar" />
         </Router>
       </div>
     );
