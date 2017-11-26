@@ -22,11 +22,28 @@ const MONTHS = [
   "December"
 ];
 
-const ToolTip = () => (
-  <div className={style.tooltip}>
-    asas
-    <ul>
-      <li>shshjs</li>
+const Feeling = () => (
+  <div className={style.feeling}>
+    <div className={style.day}>ss</div>
+    <ul className={style.moji}>
+      <li>
+        <button>Surprise</button>
+      </li>
+      <li>
+        <button>Happiness</button>
+      </li>
+      <li>
+        <button>Love</button>
+      </li>
+      <li>
+        <button>Anger</button>
+      </li>
+      <li>
+        <button>Fear</button>
+      </li>
+      <li>
+        <button>Sadness</button>
+      </li>
     </ul>
   </div>
 );
@@ -107,6 +124,7 @@ class Calendar extends Component {
             ))}
           </ul>
         </section>
+        <Feeling />
       </div>
     );
   }

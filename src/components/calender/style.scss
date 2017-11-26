@@ -1,4 +1,5 @@
 .cal {
+  padding-bottom: 30px;
   ul {
     padding: 0;
     margin: 0;
@@ -25,6 +26,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: 30px;
+    min-height: 360px;
     li {
       height: 60px;
       display: flex;
@@ -37,38 +40,36 @@
   }
 }
 
-.tooltip {
-  display: inline-block;
-  height: 50px;
-  width: 250px;
-  text-align: center;
-  font-family: sans-serif;
-  background-color: #fcfcfc;
-  border: 1px solid #e3e9ec;
-  line-height: 50px;
-  font-size: 24px;
-  border-radius: 3px;
-  position: relative;
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 20px;
-    top: 100%;
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
-    border-top-color: #e3e9ec;
+.feeling {
+  margin-left: 10px;
+  margin-right: 10px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+
+  /* Bg: */
+  background: #ffffff;
+  display: flex;
+  flex-direction: row;
+  height: 60px;
+  border-radius: 2px;
+  .day {
+    font-size: 14px;
+    color: #fff;
+    display: flex;
+    flex: 0 0 50px;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(-45deg, #f77062 0%, #fe5196 100%);
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
   }
-  &:after {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 21px;
-    top: 100%;
-    width: 0;
-    height: 0;
-    border: 9px solid transparent;
-    border-top-color: #fcfcfc;
+  .moji {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    flex-direction: row;
+    li {
+      display: flex;
+      flex: 1 1 auto;
+    }
   }
 }
