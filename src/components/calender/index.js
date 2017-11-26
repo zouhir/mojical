@@ -22,37 +22,33 @@ const MONTHS = [
   "December"
 ];
 
-const Feeling = () => (
+const FEELINGS = ["happiness", "love", "surprise", "anger", "fear", "sadness"];
+
+const Feeling = ({ selectedDate, postFeeling }) => (
   <div className={style.feeling}>
-    <div className={style.day}>ss</div>
+    <div className={style.day}>{selectedDate.day}</div>
     <ul className={style.moji}>
-      <li>
-        <button>Surprise</button>
-      </li>
-      <li>
-        <button>Happiness</button>
-      </li>
-      <li>
-        <button>Love</button>
-      </li>
-      <li>
-        <button>Anger</button>
-      </li>
-      <li>
-        <button>Fear</button>
-      </li>
-      <li>
-        <button>Sadness</button>
-      </li>
+      {FEELINGS.map(f => (
+        <li>
+          <button
+            aria-label={`feeling ${f}`}
+            onClick={() => postFeeling(f.toLowerCase())}
+            style={{ backgroundImage: `url(../../assets/emojis/${f}.svg)` }}
+          />
+        </li>
+      ))}
     </ul>
   </div>
 );
 
 class Calendar extends Component {
   state = {
+    day: null,
     month: null,
     year: null,
-    monthDays: []
+    monthDays: [],
+    currentUserDate: null,
+    selectedDate: { day: -1, month: -1 }
   };
   componentDidMount() {
     let date = new Date();
@@ -61,9 +57,17 @@ class Calendar extends Component {
     // get current year user's in
     let currentYear = date.getFullYear();
 
+    let currentDay = date.getDate();
+
     this.setState({
       month: currentMonth,
-      year: currentYear
+      year: currentYear,
+      day: currentDay,
+      currentUserDate: {
+        month: currentMonth,
+        year: currentYear,
+        day: currentDay
+      }
     });
 
     this.setCurrentMonthDays();
@@ -106,7 +110,19 @@ class Calendar extends Component {
     }
   };
 
-  render({}, { month, year, monthDays }) {
+  selectDay = ({ day, month }) => {
+    this.setState({
+      selectedDate: {
+        day: day,
+        month: month,
+        year: this.state.year
+      }
+    });
+  };
+
+  postFeeling = () => {};
+
+  render({}, { month, year, monthDays, selectedDate, currentUserDate }) {
     return (
       <div className={style.cal}>
         <CalendarHeader
@@ -119,12 +135,19 @@ class Calendar extends Component {
           <ul className={style.body}>
             {monthDays.map((d, idx) => (
               <li>
-                <Day value={d} day={idx - 1} month={month} year={year} />
+                <Day
+                  day={d}
+                  month={month}
+                  year={year}
+                  currentUserDate={currentUserDate}
+                  selectedDate={selectedDate}
+                  selectDay={this.selectDay}
+                />
               </li>
             ))}
           </ul>
         </section>
-        <Feeling />
+        {selectedDate.day > -1 && <Feeling selectedDate={selectedDate} />}
       </div>
     );
   }

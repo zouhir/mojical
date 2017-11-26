@@ -3,8 +3,8 @@ import style from "./style.scss";
 
 import CalIcon from "../Icons/Cal";
 
-import happy from "../../assets/emojis/happy.svg";
-import sad from "../../assets/emojis/sad.svg";
+import happy from "../../assets/emojis/happiness.svg";
+import sad from "../../assets/emojis/sadness.svg";
 import love from "../../assets/emojis/love.svg";
 
 let svgArr = [happy, sad, love];

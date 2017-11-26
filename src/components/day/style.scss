@@ -1,4 +1,12 @@
+button.day {
+  border: none;
+  outline: none;
+}
 .day {
+  &:focus,
+  &:active {
+    text-decoration: underline;
+  }
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -11,11 +19,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  &.today {
+  &.selected {
     background-image: linear-gradient(-45deg, #f77062 0%, #fe5196 100%);
     background-size: 42px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
     border-radius: 40px;
     color: #fff;
+  }
+  &.today {
+    font-weight: bold;
+    background-size: 42px;
+    border-radius: 40px;
+    color: #f77062;
   }
 }

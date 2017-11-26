@@ -70,6 +70,17 @@
     li {
       display: flex;
       flex: 1 1 auto;
+      align-items: center;
+      justify-content: center;
+      button {
+        width: 42px;
+        height: 42px;
+        border: none;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        background-size: 32px;
+        background-position: center;
+      }
     }
   }
 }
