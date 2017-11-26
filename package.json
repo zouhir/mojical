@@ -22,6 +22,7 @@
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
+    "date-fns": "^1.29.0",
     "firebase": "^4.6.2",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",

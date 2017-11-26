@@ -17,6 +17,9 @@ class HomeLogo extends Component {
     // start a timer for the clock:
     this.timer = setInterval(this.updateEmoji, 1000);
   }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
   updateEmoji = () => {
     let current = this.state.current;
     current++;

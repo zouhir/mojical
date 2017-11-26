@@ -1,3 +1,6 @@
+if (!global || !global.XMLHttpRequest) {
+  global.XMLHttpRequest = {};
+}
 import firebase from "firebase/app";
 import "firebase/auth";
 
