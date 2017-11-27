@@ -1,0 +1,36 @@
+$breakpoint-sm: 640px;
+$breakpoint-md: 960px;
+$breakpoint-lg: 1200px;
+$breakpoint-xs-max: ($breakpoint-sm - 1);
+$breakpoint-sm-max: ($breakpoint-md - 1);
+$breakpoint-md-max: ($breakpoint-lg - 1);
+
+@mixin breakpoint($class) {
+  @if $class == xs {
+    @media (max-width: $breakpoint-xs-max) {
+      @content;
+    }
+  } @else if $class == sm {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $class == md {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $class == lg {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint media queries mixin";
+  }
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

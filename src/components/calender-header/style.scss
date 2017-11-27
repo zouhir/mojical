@@ -1,6 +1,8 @@
+@import "../../style/helpers.scss";
+
 .calHeader {
   header {
-    padding: 40px 0px;
+    padding: 20px 0px;
     text-align: center;
     background: #ffffff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
@@ -10,6 +12,9 @@
     text-transform: uppercase;
     width: 100%;
     position: relative;
+    @include breakpoint(md) {
+      padding: 40px 0px;
+    }
     button {
       position: absolute;
       height: 100%;

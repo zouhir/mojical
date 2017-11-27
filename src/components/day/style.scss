@@ -1,11 +1,12 @@
 button.day {
   border: none;
   outline: none;
+  background-color: transparent;
 }
 .day {
   &:focus,
   &:active {
-    text-decoration: underline;
+    outline: 1px dashed #fe5196;
   }
   width: 42px;
   height: 42px;
@@ -20,6 +21,7 @@ button.day {
   align-items: center;
   justify-content: center;
   &.selected {
+    outline: none;
     background-image: linear-gradient(-45deg, #f77062 0%, #fe5196 100%);
     background-size: 42px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);

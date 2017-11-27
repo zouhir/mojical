@@ -1,3 +1,4 @@
+@import "../../style/helpers.scss";
 .cal {
   padding-bottom: 30px;
   ul {
@@ -27,9 +28,12 @@
     flex-direction: row;
     flex-wrap: wrap;
     margin-bottom: 30px;
-    min-height: 360px;
     li {
-      height: 60px;
+      margin-bottom: 10px;
+      height: 40px;
+      @include breakpoint(sm) {
+        height: 60px;
+      }
       display: flex;
       flex: 0 0 14.28%;
       justify-content: center;
@@ -73,6 +77,10 @@
       align-items: center;
       justify-content: center;
       button {
+        position: relative;
+        border: none;
+        outline: none;
+        background-color: transparent;
         width: 42px;
         height: 42px;
         border: none;
@@ -80,7 +88,51 @@
         border-radius: 50%;
         background-size: 32px;
         background-position: center;
+        &:after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: -25px 0 0 -25px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          content: "";
+          opacity: 0;
+          pointer-events: none;
+        }
+        &:focus {
+          outline: 1px dashed #fe5196;
+        }
+        &:active {
+          outline: none;
+        }
+        &:active:after {
+          background: #fe5196;
+          opacity: 0.1;
+        }
+        &:active:before {
+          -webkit-animation: anim-effect-sanja 1s ease-out forwards;
+          animation: anim-effect-sanja 1s ease-out forwards;
+        }
       }
     }
+  }
+}
+
+@keyframes anim-effect-sanja {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale3d(0.5, 0.5, 1);
+    transform: scale3d(0.5, 0.5, 1);
+  }
+  25% {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
   }
 }
