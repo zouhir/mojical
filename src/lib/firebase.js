@@ -1,7 +1,7 @@
 if (!global || !global.XMLHttpRequest) {
   global.XMLHttpRequest = {};
 }
-import firebase from "firebase/app";
+import * as firebase from "firebase/app";
 import "firebase/auth";
 
 const config = {
@@ -13,8 +13,6 @@ const config = {
   messagingSenderId: "939606726339"
 };
 
-firebase.initializeApp(config);
+const fire = firebase.initializeApp(config);
 
-const firebaseAuth = firebase.auth;
-
-export { firebaseAuth };
+export default fire;

@@ -4,24 +4,34 @@ import { Router } from "preact-router";
 import Home from "../routes/home";
 import Calendar from "async!../routes/calendar";
 
-import { firebaseAuth as auth } from "../lib/firebase";
+import firebase from "../lib/firebase";
 
 export default class App extends Component {
-  /** Gets fired when the route changes.
-   *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
-   *	@param {string} event.url	The newly routed URL
-   */
+  state = {
+    auth: null
+  };
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ auth: true });
+      } else {
+        this.setState({ auth: false });
+      }
+    });
+  }
   handleRoute = e => {
-    console.log(auth().currentUser);
     this.currentUrl = e.url;
   };
 
-  render() {
+  render({}, { auth }) {
     return (
       <div id="app">
         <Router onChange={this.handleRoute}>
-          <Home path="/" />
-          <Calendar path="/my-calendar" />
+          {auth === true ? (
+            <Calendar path="/" />
+          ) : (
+            <Home path="/" auth={auth} />
+          )}
         </Router>
       </div>
     );

@@ -9,7 +9,8 @@ const Day = ({
   year,
   currentUserDate = { month: -1, day: -1 },
   selectedDate = {},
-  selectDay
+  selectDay,
+  feeling
 }) => {
   let cx = [style.day];
   if (currentUserDate.day === day && currentUserDate.month === month) {
@@ -18,13 +19,21 @@ const Day = ({
   if (selectedDate.day === day && selectedDate.month === month) {
     cx.push(style.selected);
   }
+  if (feeling) {
+    cx.push(style.hasFeeling);
+  }
   if (day !== null)
     return (
       <button
         className={cx.join(" ")}
         onClick={() => selectDay({ day: day, month: month })}
+        style={
+          feeling
+            ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }
+            : {}
+        }
       >
-        {day}
+        <span>{day}</span>
       </button>
     );
   return null;

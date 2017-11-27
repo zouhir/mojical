@@ -6,6 +6,9 @@ import getDay from "date-fns/get_day";
 import CalendarHeader from "../calender-header";
 import Day from "../day";
 
+import "../../lib/database";
+import firebase from "../../lib/firebase";
+
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
 const MONTHS = [
   "January",
@@ -71,6 +74,9 @@ class Calendar extends Component {
     });
 
     this.setCurrentMonthDays();
+
+    // check for data
+    this.readMonthFeelings();
   }
   monthToString = () => {
     return MONTHS[this.state.month];
@@ -94,7 +100,7 @@ class Calendar extends Component {
       if (i < 1) {
         monthDays.push(null);
       } else {
-        monthDays.push(i);
+        monthDays.push({ day: i, feeling: null });
       }
     }
     this.setState({ monthDays: monthDays });
@@ -103,11 +109,12 @@ class Calendar extends Component {
   updateMonth = value => {
     let month = this.state.month;
     month += value;
-    console.log(month);
     if (month >= 0 && month <= 11) {
       this.setState({ month });
       this.setCurrentMonthDays();
     }
+    // check for data
+    this.readMonthFeelings();
   };
 
   selectDay = ({ day, month }) => {
@@ -120,7 +127,35 @@ class Calendar extends Component {
     });
   };
 
-  postFeeling = () => {};
+  postFeeling = feeling => {
+    let userId = firebase.auth().currentUser.uid;
+    let { year, month, day } = this.state.selectedDate;
+    firebase
+      .database()
+      .ref(`calendar/${userId}/${year}-${month}`)
+      .update({
+        [day]: feeling
+      });
+  };
+
+  readMonthFeelings = () => {
+    var userId = firebase.auth().currentUser.uid;
+    let { year, month } = this.state;
+    return firebase
+      .database()
+      .ref(`calendar/${userId}/${year}-${month}`)
+      .once("value")
+      .then(snapshot => {
+        let vals = snapshot.val();
+        let m = this.state.monthDays.map(d => {
+          if (d && vals && d.day && vals[d.day]) {
+            return { day: d.day, feeling: vals[d.day] };
+          }
+          return d;
+        });
+        this.setState({ monthDays: m });
+      });
+  };
 
   render({}, { month, year, monthDays, selectedDate, currentUserDate }) {
     return (
@@ -130,13 +165,13 @@ class Calendar extends Component {
           updateMonth={this.updateMonth}
         />
         <section>
-          {/* <ToolTip /> */}
           <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
           <ul className={style.body}>
             {monthDays.map((d, idx) => (
               <li>
                 <Day
-                  day={d}
+                  day={d ? d.day : null}
+                  feeling={d ? d.feeling : null}
                   month={month}
                   year={year}
                   currentUserDate={currentUserDate}
@@ -147,7 +182,9 @@ class Calendar extends Component {
             ))}
           </ul>
         </section>
-        {selectedDate.day > -1 && <Feeling selectedDate={selectedDate} />}
+        {selectedDate.day > -1 && (
+          <Feeling selectedDate={selectedDate} postFeeling={this.postFeeling} />
+        )}
       </div>
     );
   }

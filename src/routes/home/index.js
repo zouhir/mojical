@@ -5,23 +5,17 @@ import { route } from "preact-router";
 import Button from "../../components/button";
 import HomeLogo from "../../components/home-logo";
 
-import { firebaseAuth as auth } from "../../lib/firebase";
+import firebase from "../../lib/firebase";
 
 export default class Home extends Component {
-  componentDidMount() {
-    auth().onAuthStateChanged(function(user) {
-      if (user) {
-        route("/my-calendar", true);
-      }
-    });
-  }
   loginWithGoogle = () => {
-    auth()
+    firebase
+      .auth()
       .setPersistence(auth.Auth.Persistence.LOCAL)
       .then(() => {
         let provider = new auth.GoogleAuthProvider();
         provider.addScope("https://www.googleapis.com/auth/plus.login");
-        auth().signInWithRedirect(provider);
+        firebase.auth().signInWithRedirect(provider);
       })
       .catch(function(error) {
         var errorCode = error.code;
