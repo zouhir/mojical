@@ -1,32 +1,30 @@
 import { h } from "preact";
-
+import cx from "classnames";
 import style from "./style.scss";
 
 const Day = ({
-  value,
   day,
-  month,
-  year,
-  currentUserDate = { month: -1, day: -1 },
-  selectedDate = {},
-  selectDay,
-  feeling
+  userDeviceDate,
+  selectedDate,
+  feeling,
+  today,
+  disabled,
+  chooseDay
 }) => {
-  let cx = [style.day];
-  if (currentUserDate.day === day && currentUserDate.month === month) {
-    cx.push(style.today);
-  }
-  if (selectedDate.day === day && selectedDate.month === month) {
-    cx.push(style.selected);
-  }
-  if (feeling) {
-    cx.push(style.hasFeeling);
-  }
+  let classes = cx(
+    style.day,
+    feeling && style.hasFeeling,
+    today && style.today,
+    {
+      [style.selected]: day === selectedDate.day
+    }
+  );
   if (day !== null)
     return (
       <button
-        className={cx.join(" ")}
-        onClick={() => selectDay({ day: day, month: month })}
+        disabled={disabled}
+        className={classes}
+        onClick={() => chooseDay({ day: day })}
         style={
           feeling
             ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }

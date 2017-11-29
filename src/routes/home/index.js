@@ -13,7 +13,7 @@ export default class Home extends Component {
       .auth()
       .setPersistence(auth.Auth.Persistence.LOCAL)
       .then(() => {
-        let provider = new auth.GoogleAuthProvider();
+        let provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope("https://www.googleapis.com/auth/plus.login");
         firebase.auth().signInWithRedirect(provider);
       })

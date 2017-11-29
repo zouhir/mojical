@@ -14,6 +14,7 @@
     "build/*"
   ],
   "devDependencies": {
+    "classnames": "^2.2.5",
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
     "if-env": "^1.0.0",

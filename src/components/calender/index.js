@@ -1,190 +1,174 @@
 import { h, Component } from "preact";
 
 import style from "./style.scss";
-import getDaysInMonth from "date-fns/get_days_in_month";
-import getDay from "date-fns/get_day";
 import CalendarHeader from "../calender-header";
 import Day from "../day";
+import Feelings from "../feelings";
 
 import "../../lib/database";
 import firebase from "../../lib/firebase";
 
+import { calendarPageDays, monthToString } from "../../lib/date";
+
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
-
-const FEELINGS = ["happiness", "love", "surprise", "anger", "fear", "sadness"];
-
-const Feeling = ({ selectedDate, postFeeling }) => (
-  <div className={style.feeling}>
-    <div className={style.day}>{selectedDate.day}</div>
-    <ul className={style.moji}>
-      {FEELINGS.map(f => (
-        <li>
-          <button
-            aria-label={`feeling ${f}`}
-            onClick={() => postFeeling(f.toLowerCase())}
-            style={{ backgroundImage: `url(../../assets/emojis/${f}.svg)` }}
-          />
-        </li>
-      ))}
-    </ul>
-  </div>
-);
 
 class Calendar extends Component {
   state = {
-    day: null,
-    month: null,
-    year: null,
-    monthDays: [],
-    currentUserDate: null,
-    selectedDate: { day: -1, month: -1 }
+    userDeviceDate: {
+      day: null,
+      month: null,
+      year: null
+    },
+    selectedDate: {
+      day: null,
+      month: null,
+      year: null
+    },
+    calendarPage: [],
+    loading: true
   };
   componentDidMount() {
     let date = new Date();
     // get currentMonth user's in
-    let currentMonth = date.getMonth();
-    // get current year user's in
-    let currentYear = date.getFullYear();
-
-    let currentDay = date.getDate();
-
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let userDeviceDate = {
+      day,
+      month,
+      year
+    };
+    let selectedDate = userDeviceDate;
+    let calendarPage = calendarPageDays(month, year);
     this.setState({
-      month: currentMonth,
-      year: currentYear,
-      day: currentDay,
-      currentUserDate: {
-        month: currentMonth,
-        year: currentYear,
-        day: currentDay
-      }
+      selectedDate,
+      userDeviceDate,
+      calendarPage
     });
-
-    this.setCurrentMonthDays();
 
     // check for data
     this.readMonthFeelings();
   }
-  monthToString = () => {
-    return MONTHS[this.state.month];
-  };
 
-  setCurrentMonthDays = () => {
-    let monthStartIndex = 1;
-    // get days in this month
-    let daysInCurrentMonth = getDaysInMonth(
-      new Date(this.state.year, this.state.month)
-    );
-
-    // get firs day of this month
-    let monthStartDay = getDay(new Date(this.state.year, this.state.month, 1));
-    let monthDays = [];
-    for (
-      let i = monthStartIndex - monthStartDay;
-      i <= daysInCurrentMonth;
-      i++
-    ) {
-      if (i < 1) {
-        monthDays.push(null);
-      } else {
-        monthDays.push({ day: i, feeling: null });
-      }
-    }
-    this.setState({ monthDays: monthDays });
-  };
-
-  updateMonth = value => {
-    let month = this.state.month;
-    month += value;
-    if (month >= 0 && month <= 11) {
-      this.setState({ month });
-      this.setCurrentMonthDays();
+  changeMonth = value => {
+    let selectedDate = Object.assign({}, this.state.selectedDate);
+    selectedDate.month += value;
+    if (selectedDate.month >= 0 && selectedDate.month <= 11) {
+      let calendarPage = calendarPageDays(
+        selectedDate.month,
+        selectedDate.year
+      );
+      this.setState({ selectedDate, calendarPage });
     }
     // check for data
-    this.readMonthFeelings();
+    his.readMonthFeelings();
   };
 
-  selectDay = ({ day, month }) => {
+  chooseDay = ({ day }) => {
+    let selectedDate = Object.assign({}, this.state.selectedDate);
+    selectedDate.day = day;
     this.setState({
-      selectedDate: {
-        day: day,
-        month: month,
-        year: this.state.year
-      }
+      selectedDate
     });
   };
 
   postFeeling = feeling => {
     let userId = firebase.auth().currentUser.uid;
     let { year, month, day } = this.state.selectedDate;
-    firebase
+    let selectedDate = Object.assign({}, this.state.selectedDate);
+    let oldCalendarPage = Object.assign({}, this.state.calendarPage);
+    let calendarPage = this.state.calendarPage.map(day => {
+      if (day && day.day === selectedDate.day) {
+        day.feeling = feeling;
+      }
+      return day;
+    });
+
+    this.setState({ calendarPage });
+
+    let databaseRef = firebase
       .database()
-      .ref(`calendar/${userId}/${year}-${month}`)
-      .update({
-        [day]: feeling
-      });
+      .ref(`calendar/${userId}/${year}-${month}`);
+    databaseRef.update({
+      [day]: feeling
+    });
+    databaseRef.on("value", snapshot => {
+      if (!snapshot.val()) {
+        this.setState({ calendarPage: oldCalendarPage });
+      }
+    });
   };
 
   readMonthFeelings = () => {
     var userId = firebase.auth().currentUser.uid;
-    let { year, month } = this.state;
+    let { year, month } = this.state.selectedDate;
     return firebase
       .database()
       .ref(`calendar/${userId}/${year}-${month}`)
       .once("value")
       .then(snapshot => {
         let vals = snapshot.val();
-        let m = this.state.monthDays.map(d => {
-          if (d && vals && d.day && vals[d.day]) {
-            return { day: d.day, feeling: vals[d.day] };
-          }
-          return d;
-        });
-        this.setState({ monthDays: m });
+        this.assignFeelingsToDate(vals);
       });
   };
 
-  render({}, { month, year, monthDays, selectedDate, currentUserDate }) {
+  assignFeelingsToDate = feelingsSnapshot => {
+    let m = this.state.calendarPage.map(d => {
+      if (d && feelingsSnapshot && d.day && feelingsSnapshot[d.day]) {
+        return { day: d.day, feeling: feelingsSnapshot[d.day] };
+      }
+      return d;
+    });
+    this.setState({ calendarPage: m });
+  };
+
+  render({}, { selectedDate, userDeviceDate, calendarPage }) {
     return (
       <div className={style.cal}>
         <CalendarHeader
-          month={this.monthToString()}
-          updateMonth={this.updateMonth}
+          month={monthToString(selectedDate.month)}
+          changeMonth={this.changeMonth}
         />
         <section>
           <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
           <ul className={style.body}>
-            {monthDays.map((d, idx) => (
-              <li>
-                <Day
-                  day={d ? d.day : null}
-                  feeling={d ? d.feeling : null}
-                  month={month}
-                  year={year}
-                  currentUserDate={currentUserDate}
-                  selectedDate={selectedDate}
-                  selectDay={this.selectDay}
-                />
-              </li>
-            ))}
+            {calendarPage.map((d, idx) => {
+              let disabled = false;
+              let today = false;
+              if (selectedDate.month > userDeviceDate.month) {
+                disabled = true;
+              }
+              if (
+                selectedDate.month === userDeviceDate.month &&
+                d &&
+                d.day > userDeviceDate.day
+              ) {
+                disabled = true;
+              }
+              if (
+                selectedDate.month === userDeviceDate.month &&
+                d &&
+                d.day === userDeviceDate.day
+              ) {
+                today = true;
+              }
+              return (
+                <li>
+                  <Day
+                    day={d ? d.day : null}
+                    feeling={d ? d.feeling : null}
+                    userDeviceDate={userDeviceDate}
+                    selectedDate={selectedDate}
+                    disabled={disabled}
+                    today={today}
+                    chooseDay={this.chooseDay}
+                  />
+                </li>
+              );
+            })}
           </ul>
         </section>
-        {selectedDate.day > -1 && (
-          <Feeling selectedDate={selectedDate} postFeeling={this.postFeeling} />
-        )}
+        <Feelings selectedDate={selectedDate} postFeeling={this.postFeeling} />
       </div>
     );
   }
