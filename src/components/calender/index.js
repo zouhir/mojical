@@ -52,6 +52,7 @@ class Calendar extends Component {
 
   changeMonth = value => {
     let selectedDate = Object.assign({}, this.state.selectedDate);
+    selectedDate.day = null;
     selectedDate.month += value;
     if (selectedDate.month >= 0 && selectedDate.month <= 11) {
       let calendarPage = calendarPageDays(
