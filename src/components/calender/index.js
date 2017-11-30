@@ -8,7 +8,7 @@ import Feelings from "../feelings";
 import "../../lib/database";
 import firebase from "../../lib/firebase";
 
-import { calendarPageDays, monthToString } from "../../lib/date";
+import { calendarPageDays, monthToString } from "../../lib/calendar-utils";
 
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -61,7 +61,7 @@ class Calendar extends Component {
       this.setState({ selectedDate, calendarPage });
     }
     // check for data
-    his.readMonthFeelings();
+    this.readMonthFeelings();
   };
 
   chooseDay = ({ day }) => {

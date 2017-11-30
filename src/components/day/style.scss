@@ -1,5 +1,9 @@
+// refactor from CSS to Scss
+@import "../../style/helpers.scss";
+
 button.day {
-  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
   outline: none;
 }
 button:disabled,
@@ -9,15 +13,15 @@ button[disabled] {
 .day {
   &:focus,
   &:active {
-    outline: 1px dashed #fe5196;
+    border: 1px solid rgba(0, 0, 0, 0.3);
   }
   position: relative;
   width: 42px;
   height: 42px;
-  background-image: url("../../assets/circle.svg");
-  background-position: center;
-  background-size: 42px;
-  background-repeat: no-repeat;
+  @include breakpoint(xs) {
+    width: 36px;
+    height: 36px;
+  }
   color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
   display: flex;
@@ -28,13 +32,14 @@ button[disabled] {
     outline: none;
     background-image: linear-gradient(-45deg, #f77062 0%, #fe5196 100%);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-    border-radius: 40px;
     color: #fff !important;
+    &:focus,
+    &:active {
+      border: none;
+    }
   }
   &.today {
     font-weight: bold;
-    background-size: 40px;
-    border-radius: 40px;
     color: #f77062;
   }
   &.hasFeeling {
@@ -46,14 +51,18 @@ button[disabled] {
   &.hasFeeling {
     border-radius: 0px;
     background-size: 40px;
+    @include breakpoint(xs) {
+      background-size: 34px;
+    }
+    border: none;
     background-repeat: no-repeat;
     background-position: center;
     box-shadow: none;
     span {
       position: absolute;
-      font-size: 11px;
-      top: -7px;
-      left: -7px;
+      font-size: 9px;
+      top: -6px;
+      left: -6px;
       opacity: 0.7;
     }
   }

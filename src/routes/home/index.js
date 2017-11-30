@@ -11,13 +11,13 @@ export default class Home extends Component {
   loginWithGoogle = () => {
     firebase
       .auth()
-      .setPersistence(auth.Auth.Persistence.LOCAL)
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
         let provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope("https://www.googleapis.com/auth/plus.login");
         firebase.auth().signInWithRedirect(provider);
       })
-      .catch(function(error) {
+      .catch(error => {
         var errorCode = error.code;
         var errorMessage = error.message;
       });
