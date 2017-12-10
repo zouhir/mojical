@@ -8,7 +8,7 @@ button.day {
 }
 button:disabled,
 button[disabled] {
-  opacity: 0.5;
+  opacity: 0.2;
 }
 .day {
   &:focus,
@@ -19,8 +19,8 @@ button[disabled] {
   width: 42px;
   height: 42px;
   @include breakpoint(xs) {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
   color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
@@ -52,7 +52,7 @@ button[disabled] {
     border-radius: 0px;
     background-size: 40px;
     @include breakpoint(xs) {
-      background-size: 34px;
+      background-size: 30px;
     }
     border: none;
     background-repeat: no-repeat;
