@@ -11,7 +11,7 @@ const Feelings = ({ postFeeling, selectedDate }) => {
   }
   return (
     <div className={style.feeling}>
-      <div className={style.day}>{selectedDate.day}</div>
+      <div className={style.back} />
       <ul className={style.moji}>
         {_FEELINGS.map(f => (
           <li>

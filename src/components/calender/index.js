@@ -22,7 +22,8 @@ class Calendar extends Component {
         <section>
           <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
           <ul className={style.body}>
-            {calendarPage.map((d, idx) => {
+            {calendarPage.fillers.map(d => <li />)}
+            {Object.keys(calendarPage.days).map((d, idx) => {
               let disabled = false;
               let today = false;
               if (selectedDate.month > userDeviceDate.month) {
@@ -31,22 +32,22 @@ class Calendar extends Component {
               if (
                 selectedDate.month === userDeviceDate.month &&
                 d &&
-                d.day > userDeviceDate.day
+                +d > userDeviceDate.day
               ) {
                 disabled = true;
               }
               if (
                 selectedDate.month === userDeviceDate.month &&
                 d &&
-                d.day === userDeviceDate.day
+                +d === userDeviceDate.day
               ) {
                 today = true;
               }
               return (
                 <li>
                   <Day
-                    day={d ? d.day : null}
-                    feeling={d ? d.feeling : null}
+                    day={+d}
+                    feeling={calendarPage.days[d].feeling || null}
                     userDeviceDate={userDeviceDate}
                     selectedDate={selectedDate}
                     disabled={disabled}

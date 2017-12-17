@@ -6,6 +6,7 @@ import Footer from "../../components/footer";
 
 import firebase from "../../lib/firebase";
 import { calendarPageDays } from "../../lib/calendar-utils";
+import { getFromCalendar, postToCalendar } from "../../lib/rest";
 
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
 export default class CalendarPage extends Component {
@@ -20,7 +21,7 @@ export default class CalendarPage extends Component {
       month: null,
       year: null
     },
-    calendarPage: [],
+    calendarPage: { days: {}, fillers: [] },
     loading: true
   };
   componentDidMount() {
@@ -56,9 +57,9 @@ export default class CalendarPage extends Component {
         selectedDate.year
       );
       this.setState({ selectedDate, calendarPage });
+      // check for data
+      this.readMonthFeelings();
     }
-    // check for data
-    this.readMonthFeelings();
   };
 
   chooseDay = ({ day }) => {
@@ -82,31 +83,22 @@ export default class CalendarPage extends Component {
     });
 
     this.setState({ calendarPage });
-
-    let databaseRef = firebase
-      .database()
-      .ref(`calendar/${userId}/${year}-${month}`);
-    databaseRef.update({
-      [day]: feeling
-    });
-    databaseRef.on("value", snapshot => {
-      if (!snapshot.val()) {
-        this.setState({ calendarPage: oldCalendarPage });
-      }
-    });
   };
 
   readMonthFeelings = () => {
     var userId = firebase.auth().currentUser.uid;
     let { year, month } = this.state.selectedDate;
-    return firebase
-      .database()
-      .ref(`calendar/${userId}/${year}-${month}`)
-      .once("value")
-      .then(snapshot => {
-        let vals = snapshot.val();
-        this.assignFeelingsToDate(vals);
-      });
+    getFromCalendar(
+      { userId, year, month: month + 1 },
+      this.props.authToken
+    ).then(res => {
+      if (res) {
+        let newCal = {};
+        newCal.fillers = this.state.calendarPage.fillers;
+        newCal.days = Object.assign({}, this.state.calendarPage.days, res);
+        this.setState({ calendarPage: newCal });
+      }
+    });
   };
 
   assignFeelingsToDate = feelingsSnapshot => {

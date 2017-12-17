@@ -25,8 +25,10 @@
   "dependencies": {
     "date-fns": "^1.29.0",
     "firebase": "^4.6.2",
+    "googleapis": "^23.0.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
-    "preact-router": "^2.5.5"
+    "preact-router": "^2.5.5",
+    "unfetch": "^3.0.0"
   }
 }

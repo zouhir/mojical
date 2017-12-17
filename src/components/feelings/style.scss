@@ -1,28 +1,17 @@
 .feeling {
-  margin-left: 10px;
-  margin-right: 10px;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-
-  /* Bg: */
-  background: #ffffff;
-  display: flex;
-  flex-direction: row;
-  height: 60px;
-  border-radius: 2px;
-  .day {
-    font-size: 14px;
-    color: #fff;
-    display: flex;
-    flex: 0 0 50px;
-    align-items: center;
-    justify-content: center;
-    background-image: linear-gradient(-45deg, #f77062 0%, #fe5196 100%);
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+  padding-left: 40px;
+  position: relative;
+  height: 100%;
+  .back {
+    position: absolute;
+    height: 100%;
+    width: 40px;
+    left: 0;
+    top: 0;
   }
   .moji {
+    height: 100%;
     display: flex;
-    flex: 1 1 auto;
     align-items: center;
     flex-direction: row;
     li {

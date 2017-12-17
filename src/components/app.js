@@ -8,29 +8,40 @@ import firebase from "../lib/firebase";
 
 export default class App extends Component {
   state = {
-    auth: null
+    authToken: null
   };
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ auth: true });
+        firebase
+          .auth()
+          .currentUser.getIdToken(/* forceRefresh */ true)
+          .then(idToken => {
+            console.log(idToken);
+            this.setState({ authToken: idToken });
+          })
+          .catch(function(error) {
+            console.log(error);
+            this.setState({ authToken: null });
+          });
       } else {
-        this.setState({ auth: false });
+        this.setState({ authToken: null });
       }
     });
   }
+
   handleRoute = e => {
     this.currentUrl = e.url;
   };
 
-  render({}, { auth }) {
+  render({}, { authToken }) {
     return (
       <div id="app">
         <Router onChange={this.handleRoute}>
-          {auth === true ? (
-            <Calendar path="/" />
+          {authToken !== null ? (
+            <Calendar path="/" authToken={authToken} />
           ) : (
-            <Home path="/" auth={auth} />
+            <Home path="/" authToken={authToken} />
           )}
         </Router>
       </div>
