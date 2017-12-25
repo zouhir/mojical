@@ -5,6 +5,10 @@ const postToCalendar = ({ userId, year, month, day, feeling }, token) => {
   return fetch(
     "https://calendar-moji.firebaseio.com/calendar/" +
       userId +
+      "/" +
+      year +
+      "/" +
+      month +
       ".json?auth=" +
       token,
     {
@@ -13,16 +17,10 @@ const postToCalendar = ({ userId, year, month, day, feeling }, token) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        [year]: {
-          [month]: {
-            [day]: feeling
-          }
-        }
+        [day]: { feeling: feeling }
       })
     }
-  ).then(r => {
-    console.log(r);
-  });
+  ).then(r => r.json());
 };
 
 const getFromCalendar = ({ userId, year, month }, token) => {

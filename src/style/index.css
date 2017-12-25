@@ -22,4 +22,5 @@ body {
   min-height: 100%;
   background-image: linear-gradient(to bottom, #fe5196 0%, #f77062 100%);
   position: relative;
+  padding-bottom: 60px;
 }

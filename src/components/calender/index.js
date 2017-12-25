@@ -1,9 +1,8 @@
 import { h, Component } from "preact";
 
 import style from "./style.scss";
-import CalendarHeader from "../calender-header";
-import Day from "../day";
-import Feelings from "../feelings";
+import Header from "../calender-header";
+import Day from "../calendar-day";
 
 import "../../lib/database";
 
@@ -12,18 +11,36 @@ import { monthToString } from "../../lib/calendar-utils";
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
 class Calendar extends Component {
-  render({ selectedDate, userDeviceDate, calendarPage }) {
+  emptyDaysList = ln => {
+    let nullDays = [];
+    for (let i = 0; i < ln; i++) {
+      nullDays.push(null);
+    }
+    return nullDays;
+  };
+  render({
+    selectedDate,
+    userDeviceDate,
+    calendarPage,
+    monthFillers,
+    incrementMonth,
+    decrementMonth,
+    selectDate
+  }) {
     return (
       <div className={style.cal}>
-        <CalendarHeader
-          month={monthToString(selectedDate.month)}
-          changeMonth={this.props.changeMonth}
+        <Header
+          month={
+            selectedDate ? monthToString(selectedDate.month) : "loading..."
+          }
+          incrementMonth={incrementMonth}
+          decrementMonth={decrementMonth}
         />
         <section>
           <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
           <ul className={style.body}>
-            {calendarPage.fillers.map(d => <li />)}
-            {Object.keys(calendarPage.days).map((d, idx) => {
+            {this.emptyDaysList(monthFillers).map(d => <li />)}
+            {Object.keys(calendarPage).map((d, idx) => {
               let disabled = false;
               let today = false;
               if (selectedDate.month > userDeviceDate.month) {
@@ -47,12 +64,12 @@ class Calendar extends Component {
                 <li>
                   <Day
                     day={+d}
-                    feeling={calendarPage.days[d].feeling || null}
+                    feeling={calendarPage[d].feeling || null}
                     userDeviceDate={userDeviceDate}
                     selectedDate={selectedDate}
                     disabled={disabled}
                     today={today}
-                    chooseDay={this.props.chooseDay}
+                    selectDate={selectDate}
                   />
                 </li>
               );

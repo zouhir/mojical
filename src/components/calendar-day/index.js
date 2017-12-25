@@ -4,8 +4,8 @@ import style from "./style.scss";
 
 const Day = ({
   day,
-  userDeviceDate,
   selectedDate,
+  selectDate,
   feeling,
   today,
   disabled,
@@ -24,7 +24,13 @@ const Day = ({
       <button
         disabled={disabled}
         className={classes}
-        onClick={() => chooseDay({ day: day })}
+        onClick={() =>
+          selectDate({
+            year: selectedDate.year,
+            month: selectedDate.month,
+            day: day
+          })
+        }
         style={
           feeling
             ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }

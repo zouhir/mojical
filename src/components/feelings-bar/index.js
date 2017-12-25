@@ -4,14 +4,10 @@ import style from "./style.scss";
 
 const _FEELINGS = ["happiness", "love", "surprise", "anger", "fear", "sadness"];
 
-const Feelings = ({ postFeeling, selectedDate }) => {
-  let disabled = false;
-  if (!selectedDate || !selectedDate.day) {
-    disabled = true;
-  }
+const Feelings = ({ postFeeling, selectedDate, resetDaySelection }) => {
   return (
     <div className={style.feeling}>
-      <div className={style.back} />
+      <button className={style.back} onClick={resetDaySelection} />
       <ul className={style.moji}>
         {_FEELINGS.map(f => (
           <li>
@@ -21,7 +17,6 @@ const Feelings = ({ postFeeling, selectedDate }) => {
                 postFeeling(f.toLowerCase());
               }}
               style={{ backgroundImage: `url(../../assets/emojis/${f}.svg)` }}
-              disabled={disabled}
             />
           </li>
         ))}

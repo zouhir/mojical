@@ -3,55 +3,30 @@
   box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.1);
   position: absolute;
   bottom: 0;
-  height: 60px;
   width: 100%;
   font-size: 0;
-  .tile {
-    width: 20%;
-    display: inline-block;
-    text-align: center;
-    position: relative;
-    font-size: 16px;
-    height: 100%;
-    &.compose {
-      /* sexy trick */
-      background-size: 200%;
-      background-position: top left;
-      background-image: linear-gradient(-228deg, #ff8162, #f8b642);
-    }
-    svg {
-      width: 22px;
-      height: 22px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin: -11px 0px 0px -11px;
-    }
-    .avatar {
-      width: 30px;
-      height: 30px;
-      overflow: hidden;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin: -15px 0px 0px -15px;
-      img {
-        width: 100%;
-      }
-    }
-    span {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 3px;
-      background: green;
-      display: block;
-      top: 50%;
-      right: 50%;
-      margin-top: -19px;
-      margin-right: -17px;
-      opacity: 0.7;
+  padding: 5px 0px;
+  .container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    height: 50px;
+  }
+}
+
+.footerNav {
+  display: flex;
+  align-items: center;
+  button {
+    background: transparent;
+    border: 0px;
+    flex: 1 1 auto;
+    width: 125px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    &.floatRight {
+      margin-left: auto;
     }
   }
 }

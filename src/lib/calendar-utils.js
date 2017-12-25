@@ -28,18 +28,19 @@ const calendarPageDays = (month, year) => {
 
   // get firs day of this month
   let monthStartDay = getDay(new Date(year, month, MONTH_START));
+
+  console.log(monthStartDay);
+
   let monthDays = {
-    fillers: [],
-    days: {}
+    monthFillers: 0
   };
   for (let i = MONTH_START - monthStartDay; i <= daysInCurrentMonth; i++) {
     if (i < 1) {
-      monthDays.fillers.push(null);
+      monthDays.monthFillers += 1;
     } else {
-      monthDays.days[i] = { feeling: null };
+      monthDays[i] = { feeling: null };
     }
   }
-  console.log(monthDays);
   cache[year] = {};
   cache[year][month] = monthDays;
   return monthDays;

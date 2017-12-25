@@ -1,5 +1,4 @@
 .feeling {
-  padding-left: 40px;
   position: relative;
   height: 100%;
   .back {
@@ -8,6 +7,13 @@
     width: 40px;
     left: 0;
     top: 0;
+    background: transparent;
+    border: none;
+    background: url("../../assets/arrow.svg");
+    transform: rotate(180deg);
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   .moji {
     height: 100%;

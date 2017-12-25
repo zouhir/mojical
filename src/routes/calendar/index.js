@@ -1,135 +1,134 @@
 import { h, Component } from "preact";
 import style from "./style.scss";
 
+// components
 import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
 
-import firebase from "../../lib/firebase";
-import { calendarPageDays } from "../../lib/calendar-utils";
+// util
 import { getFromCalendar, postToCalendar } from "../../lib/rest";
 
-const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
-export default class CalendarPage extends Component {
+//store
+import { connect } from "unistore/preact";
+import { actions } from "../../store";
+
+@connect(
+  ["user", "today", "selectedDate", "monthStartDay", "monthCalendar"],
+  actions
+)
+class CalendarPage extends Component {
   state = {
-    userDeviceDate: {
-      day: null,
-      month: null,
-      year: null
-    },
-    selectedDate: {
-      day: null,
-      month: null,
-      year: null
-    },
-    calendarPage: { days: {}, fillers: [] },
-    loading: true
+    monthFillers: 0,
+    calendarPage: {},
+    loading: true,
+    seletedDateState: null
   };
   componentDidMount() {
+    console.log("mounted");
     let date = new Date();
-    // get currentMonth user's in
     let day = date.getDate();
     let month = date.getMonth();
     let year = date.getFullYear();
-    let userDeviceDate = {
-      day,
-      month,
-      year
-    };
-    let selectedDate = userDeviceDate;
-    let calendarPage = calendarPageDays(month, year);
-    this.setState({
-      selectedDate,
-      userDeviceDate,
-      calendarPage
-    });
 
-    // check for data
-    this.readMonthFeelings();
+    let { setToday } = this.props;
+    this.setState({ seletedDateState: "asas" });
+    setToday({ year, month, day });
   }
-
-  changeMonth = value => {
-    let selectedDate = Object.assign({}, this.state.selectedDate);
-    selectedDate.day = null;
-    selectedDate.month += value;
-    if (selectedDate.month >= 0 && selectedDate.month <= 11) {
-      let calendarPage = calendarPageDays(
-        selectedDate.month,
-        selectedDate.year
-      );
-      this.setState({ selectedDate, calendarPage });
-      // check for data
-      this.readMonthFeelings();
-    }
-  };
-
-  chooseDay = ({ day }) => {
-    let selectedDate = Object.assign({}, this.state.selectedDate);
-    selectedDate.day = day;
-    this.setState({
-      selectedDate
-    });
-  };
 
   postFeeling = feeling => {
     let userId = firebase.auth().currentUser.uid;
     let { year, month, day } = this.state.selectedDate;
     let selectedDate = Object.assign({}, this.state.selectedDate);
     let oldCalendarPage = Object.assign({}, this.state.calendarPage);
-    let calendarPage = this.state.calendarPage.map(day => {
-      if (day && day.day === selectedDate.day) {
-        day.feeling = feeling;
-      }
-      return day;
+
+    let calendarPage = Object.assign({}, oldCalendarPage, {
+      [day]: { feeling: feeling }
     });
 
+    let allCalendars = {};
+    if (!allCalendars[year]) {
+      allCalendars[year] = {};
+    }
+    allCalendars[year][month] = calendarPage;
+
     this.setState({ calendarPage });
+
+    postToCalendar(
+      { userId, year, month: month + 1, day, feeling },
+      this.props.authToken
+    ).then(res => {
+      if (res) {
+        let newCal = {};
+        newCal = Object.assign({}, this.state.calendarPage, res);
+        let allCalendars = {};
+        if (!allCalendars[year]) {
+          allCalendars[year] = {};
+        }
+        allCalendars[year][month] = newCal;
+        this.setState({ calendarPage: newCal, allCalendars });
+      }
+    });
   };
 
   readMonthFeelings = () => {
-    var userId = firebase.auth().currentUser.uid;
     let { year, month } = this.state.selectedDate;
+    if (this.state.allCalendars[year][month]) {
+      this.setState({ calendarPage: this.state.allCalendars[year][month] });
+    }
+
+    var userId = firebase.auth().currentUser.uid;
     getFromCalendar(
       { userId, year, month: month + 1 },
       this.props.authToken
     ).then(res => {
       if (res) {
         let newCal = {};
-        newCal.fillers = this.state.calendarPage.fillers;
-        newCal.days = Object.assign({}, this.state.calendarPage.days, res);
-        this.setState({ calendarPage: newCal });
+        newCal = Object.assign({}, this.state.calendarPage, res);
+        let allCalendars = {};
+        if (!allCalendars[year]) {
+          allCalendars[year] = {};
+        }
+        allCalendars[year][month] = newCal;
+        this.setState({ calendarPage: newCal, allCalendars });
       }
     });
   };
 
-  assignFeelingsToDate = feelingsSnapshot => {
-    let m = this.state.calendarPage.map(d => {
-      if (d && feelingsSnapshot && d.day && feelingsSnapshot[d.day]) {
-        return { day: d.day, feeling: feelingsSnapshot[d.day] };
-      }
-      return d;
-    });
-    this.setState({ calendarPage: m });
-  };
   // Note: `user` comes from the URL, courtesy of our router
-  render({ user }, { time, count }) {
+  render({
+    user,
+    today,
+    selectedDate,
+    selectDate,
+    monthStartDay,
+    monthCalendar,
+    incrementMonth,
+    decrementMonth,
+    resetDaySelection
+  }) {
     return (
       <div className={style.calendar}>
         <div className={style.cardContainer}>
           <div className={style.mainCard}>
             <Calendar
-              selectedDate={this.state.selectedDate}
-              userDeviceDate={this.state.userDeviceDate}
-              calendarPage={this.state.calendarPage}
-              chooseDay={this.chooseDay}
-              changeMonth={this.changeMonth}
+              selectedDate={selectedDate}
+              userDeviceDate={today}
+              monthFillers={monthStartDay}
+              calendarPage={monthCalendar}
+              incrementMonth={incrementMonth}
+              decrementMonth={decrementMonth}
+              selectDate={selectDate}
             />
           </div>
         </div>
         <Footer
           postFeeling={this.postFeeling}
-          selectedDate={this.state.selectedDate}
+          selectedDate={selectedDate}
+          resetDaySelection={resetDaySelection}
         />
       </div>
     );
   }
 }
+
+export default CalendarPage;

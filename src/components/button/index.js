@@ -5,7 +5,7 @@ const Button = ({ href, label, value, onClick }) => {
   if (href)
     return (
       <a className={style.button} href={href} onClick={onClick}>
-        {value}{" "}
+        {value}
       </a>
     );
   return (

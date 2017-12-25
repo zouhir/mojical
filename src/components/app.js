@@ -1,31 +1,38 @@
 import { h, Component } from "preact";
-import { Router } from "preact-router";
+import { Router, route } from "preact-router";
 
-import Home from "../routes/home";
+// routes
+import Home from "async!../routes/home";
 import Calendar from "async!../routes/calendar";
-
-import firebase from "../lib/firebase";
-
-export default class App extends Component {
-  state = {
-    authToken: null
-  };
+// util
+import Auth from "../util/auth";
+// store
+import { connect } from "unistore/preact";
+import { actions } from "../store";
+@connect([], actions)
+class App extends Component {
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
+    Auth.authInstance().onAuthStateChanged(user => {
       if (user) {
-        firebase
-          .auth()
-          .currentUser.getIdToken(/* forceRefresh */ true)
-          .then(idToken => {
-            console.log(idToken);
-            this.setState({ authToken: idToken });
+        let u = {};
+        u.displayName = user.displayName;
+        u.email = user.email;
+        u.emailVerified = user.emailVerified;
+        u.photoURL = user.photoURL;
+        u.isAnonymous = user.isAnonymous;
+        u.uid = user.uid;
+        u.providerData = user.providerData;
+        Auth.getToken()
+          .then(token => {
+            u.authToken = token;
+            this.props.setUser(u);
+            route("/calendar");
           })
-          .catch(function(error) {
-            console.log(error);
-            this.setState({ authToken: null });
+          .catch(error => {
+            console.error(error);
           });
       } else {
-        this.setState({ authToken: null });
+        this.setState({ user: null });
       }
     });
   }
@@ -34,17 +41,16 @@ export default class App extends Component {
     this.currentUrl = e.url;
   };
 
-  render({}, { authToken }) {
+  render({}, { authToken, user }) {
     return (
       <div id="app">
         <Router onChange={this.handleRoute}>
-          {authToken !== null ? (
-            <Calendar path="/" authToken={authToken} />
-          ) : (
-            <Home path="/" authToken={authToken} />
-          )}
+          <Home path="/" signIn={Auth.signIn} />
+          <Calendar path="/calendar" signOut={Auth.signOut} />
         </Router>
       </div>
     );
   }
 }
+
+export default App;

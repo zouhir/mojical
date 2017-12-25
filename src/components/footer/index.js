@@ -1,13 +1,39 @@
 import { h, Component } from "preact";
 
 import style from "./style.scss";
-import Feelings from "../feelings";
+import FeelingsBar from "../feelings-bar";
+
+import NavCal from "../Icons/Calendar";
+import Stats from "../Icons/Stats";
+import Activiyt from "../Icons/Activity";
+import Menu from "../Icons/Menu";
+
+const FooterNav = () => (
+  <div className={style.footerNav}>
+    <button>
+      <NavCal />
+    </button>
+    <button>
+      <Activiyt />
+    </button>
+    <button>
+      <Stats />
+    </button>
+    <button>
+      <Menu />
+    </button>
+  </div>
+);
 
 export default class Footer extends Component {
-  render({ isSelected }) {
+  render({ selectedDate, resetDaySelection }) {
     return (
       <div className={style.footer}>
-        <Feelings {...this.props} />
+        <div className={style.container}>
+          {selectedDate && selectedDate.day === null && <FooterNav />}
+          {selectedDate &&
+            selectedDate.day !== null && <FeelingsBar {...this.props} />}
+        </div>
       </div>
     );
   }
