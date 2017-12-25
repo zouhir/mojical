@@ -9,6 +9,9 @@ import Auth from "../util/auth";
 // store
 import { connect } from "unistore/preact";
 import { actions } from "../store";
+
+import offlinedb from "../util/offline-db";
+
 @connect([], actions)
 class App extends Component {
   componentDidMount() {
@@ -35,6 +38,10 @@ class App extends Component {
         this.setState({ user: null });
       }
     });
+
+    let odb = offlinedb("123", "feelings");
+    odb.set("latest", { hello: "world" });
+    // odb.getFeeling();
   }
 
   handleRoute = e => {

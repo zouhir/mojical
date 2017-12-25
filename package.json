@@ -30,7 +30,7 @@
     "dlv": "^1.1.0",
     "firebase": "^4.6.2",
     "googleapis": "^23.0.0",
-    "localforage": "^1.5.5",
+    "idb": "^2.0.4",
     "mitt": "^1.1.3",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
