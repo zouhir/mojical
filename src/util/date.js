@@ -3,7 +3,7 @@ import getDay from "date-fns/get_day";
 
 const MONTH_START = 1;
 
-class DateUtils {
+class dateUtils {
   static monthStartDay(year, month) {
     return getDay(new Date(year, month, MONTH_START));
   }
@@ -12,10 +12,13 @@ class DateUtils {
     let daysCount = getDaysInMonth(new Date(year, month));
     let daysObject = {};
     for (let i = 1; i <= daysCount; i++) {
-      daysObject[i] = { feeling: null };
+      daysObject[i] = {
+        /* object to hold data later */
+        /* like feelings, etc.. */
+      };
     }
     return daysObject;
   }
 }
 
-export default DateUtils;
+export default dateUtils;

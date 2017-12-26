@@ -50,6 +50,14 @@ let actions = store => ({
         monthCalendar: DateUtils.monthDays(year, month),
         selectedDate: { year, month, day: null }
       };
+  },
+  assignFeeling(state, feeling) {
+    let { monthCalendar } = state;
+    console.log(monthCalendar);
+    let { day } = state.selectedDate;
+    return {
+      monthCalendar: Object.assign({}, monthCalendar, { [day]: { feeling } })
+    };
   }
 });
 

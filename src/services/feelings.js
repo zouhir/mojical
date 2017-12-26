@@ -1,10 +1,12 @@
 import fetch from "unfetch";
-import { databaseURL } from "../config";
+import config from "../config";
 
-class FeelingsService {
-  static post({ userId, year, month, day, feeling }, online, token) {
+class feelingsService {
+  static post({ uid, year, month, day, feeling }, online, token) {
     return fetch(
-      databaseURL + userId + "/" + year + "/" + month + ".json?auth=" + token,
+      `${
+        config.databaseURL
+      }/user-feelings/${uid}/${year}/${month}.json?auth=${token}`,
       {
         method: "PATCH",
         headers: {
@@ -16,9 +18,11 @@ class FeelingsService {
       }
     ).then(r => r.json());
   }
-  static get() {
+  static get({ uid, year, month, day = null }, token) {
     return fetch(
-      databaseURL + userId + "/" + year + "/" + month + ".json?auth=" + token,
+      `${config.databaseURL}/userfeelings/${uid}/${year}/${month}${
+        day ? `/${day}` : ""
+      }.json?auth=${token}`,
       {
         method: "GET",
         headers: {
@@ -28,3 +32,5 @@ class FeelingsService {
     ).then(r => r.json());
   }
 }
+
+export default feelingsService;
