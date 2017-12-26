@@ -10,18 +10,30 @@ function OfflineDb(uid, entity) {
 
   const idbKeyval = {
     get(key) {
-      return dbPromise.then(db => {
-        return db
-          .transaction(entity)
-          .objectStore(entity)
-          .get(key);
+      return new Promise(function(resolve, reject) {
+        dbPromise
+          .then(db => {
+            resolve(
+              db
+                .transaction(entity)
+                .objectStore(entity)
+                .get(key)
+            );
+          })
+          .catch(error => reject(error));
       });
     },
     set(key, val) {
-      return dbPromise.then(db => {
-        const tx = db.transaction(entity, "readwrite");
-        tx.objectStore(entity).put(val, key);
-        return tx.complete;
+      return new Promise(function(resolve, reject) {
+        dbPromise
+          .then(db => {
+            const tx = db.transaction(entity, "readwrite");
+            tx.objectStore(entity).put(val, key);
+            resolve(tx.complete);
+          })
+          .catch(error => {
+            reject(error);
+          });
       });
     },
     delete(key) {

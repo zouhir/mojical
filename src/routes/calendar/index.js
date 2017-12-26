@@ -13,7 +13,7 @@ import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
 @connect(
-  ["user", "today", "selectedDate", "monthStartDay", "monthCalendar"],
+  ["user", "today", "selectedDate", "monthStartDay", "calendar"],
   actions
 )
 class CalendarPage extends Component {
@@ -24,19 +24,32 @@ class CalendarPage extends Component {
     console.log("mounted");
     let date = new Date();
     let day = date.getDate();
-    let month = date.getMonth();
+    let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
     let { setToday } = this.props;
     setToday({ year, month, day });
+
+    let { uid, authToken } = this.props.user;
+    feelingsService
+      .get({ uid, year, month: month }, authToken)
+      .then(response => {
+        this.props.setFeelinginCalendar({ year, month, day, response });
+      });
   }
 
   postFeeling = feeling => {
     let { uid, authToken } = this.props.user;
     let { year, month, day } = this.props.selectedDate;
-    this.props.assignFeeling(feeling);
+    let feelingObject = { [day]: { feeling } };
+    this.props.setFeelinginCalendar({
+      year,
+      month,
+      day,
+      response: feelingObject
+    });
     feelingsService
-      .post({ uid, year, month: month + 1, day, feeling }, true, authToken)
+      .post({ uid, year, month: month, day, feeling }, true, authToken)
       .then(r => console.log(r));
   };
 
@@ -47,7 +60,7 @@ class CalendarPage extends Component {
     selectedDate,
     selectDate,
     monthStartDay,
-    monthCalendar,
+    calendar,
     incrementMonth,
     decrementMonth,
     resetDaySelection
@@ -56,15 +69,17 @@ class CalendarPage extends Component {
       <div className={style.calendar}>
         <div className={style.cardContainer}>
           <div className={style.mainCard}>
-            <Calendar
-              selectedDate={selectedDate}
-              userDeviceDate={today}
-              monthFillers={monthStartDay}
-              calendarPage={monthCalendar}
-              incrementMonth={incrementMonth}
-              decrementMonth={decrementMonth}
-              selectDate={selectDate}
-            />
+            {selectedDate && (
+              <Calendar
+                selectedDate={selectedDate}
+                userDeviceDate={today}
+                monthFillers={monthStartDay}
+                calendarPage={calendar[selectedDate.year][selectedDate.month]}
+                incrementMonth={incrementMonth}
+                decrementMonth={decrementMonth}
+                selectDate={selectDate}
+              />
+            )}
           </div>
         </div>
         <Footer

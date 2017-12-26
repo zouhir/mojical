@@ -1,8 +1,12 @@
 import fetch from "unfetch";
 import config from "../config";
+import offlinedb from "../util/offline-db";
 
 class feelingsService {
   static post({ uid, year, month, day, feeling }, online, token) {
+    let payload = JSON.stringify({
+      [day]: { feeling: feeling }
+    });
     return fetch(
       `${
         config.databaseURL
@@ -12,15 +16,13 @@ class feelingsService {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          [day]: { feeling: feeling }
-        })
+        body: payload
       }
     ).then(r => r.json());
   }
   static get({ uid, year, month, day = null }, token) {
     return fetch(
-      `${config.databaseURL}/userfeelings/${uid}/${year}/${month}${
+      `${config.databaseURL}/user-feelings/${uid}/${year}/${month}${
         day ? `/${day}` : ""
       }.json?auth=${token}`,
       {

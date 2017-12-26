@@ -6,7 +6,7 @@ let store = createStore({
   today: null,
   selectedDate: null,
   monthStartDay: null,
-  monthCalendar: {}
+  calendar: {}
 });
 
 let actions = store => ({
@@ -14,10 +14,13 @@ let actions = store => ({
     return { user: user };
   },
   setToday(state, { year, month, day }) {
+    let calendar = {};
+    calendar[year] = state.calendar[year] || {};
+    calendar[year][month] = DateUtils.monthDays(year, month);
     return {
       today: { year, month, day },
       monthStartDay: DateUtils.monthStartDay(year, month),
-      monthCalendar: DateUtils.monthDays(year, month),
+      calendar: calendar,
       selectedDate: { year, month, day: null }
     };
   },
@@ -37,7 +40,7 @@ let actions = store => ({
     if (month >= 0)
       return {
         monthStartDay: DateUtils.monthStartDay(year, month),
-        monthCalendar: DateUtils.monthDays(year, month),
+        calendar: DateUtils.monthDays(year, month),
         selectedDate: { year, month, day: null }
       };
   },
@@ -47,16 +50,18 @@ let actions = store => ({
     if (month < 12)
       return {
         monthStartDay: DateUtils.monthStartDay(year, month),
-        monthCalendar: DateUtils.monthDays(year, month),
+        calendar: DateUtils.monthDays(year, month),
         selectedDate: { year, month, day: null }
       };
   },
-  assignFeeling(state, feeling) {
-    let { monthCalendar } = state;
-    console.log(monthCalendar);
-    let { day } = state.selectedDate;
+  setFeelinginCalendar(state, { year, month, day, response }) {
+    // TODO: make it pure
+    let newCal = Object.assign({}, state.calendar);
+    Object.keys(response).forEach(k => {
+      newCal[year][month][k].feeling = response[k].feeling;
+    });
     return {
-      monthCalendar: Object.assign({}, monthCalendar, { [day]: { feeling } })
+      calendar: newCal
     };
   }
 });

@@ -14,6 +14,9 @@ import offlinedb from "../util/offline-db";
 
 @connect([], actions)
 class App extends Component {
+  state = {
+    validAuth: false
+  };
   componentDidMount() {
     Auth.authInstance().onAuthStateChanged(user => {
       if (user) {
@@ -29,13 +32,13 @@ class App extends Component {
           .then(token => {
             u.authToken = token;
             this.props.setUser(u);
-            route("/calendar");
+            this.setState({ validAuth: true });
           })
           .catch(error => {
             console.error(error);
           });
       } else {
-        this.setState({ user: null });
+        this.setState({ validAuth: false });
       }
     });
 
@@ -48,12 +51,15 @@ class App extends Component {
     this.currentUrl = e.url;
   };
 
-  render({}, { authToken, user }) {
+  render({}, { validAuth }) {
     return (
       <div id="app">
         <Router onChange={this.handleRoute}>
-          <Home path="/" signIn={Auth.signIn} />
-          <Calendar path="/calendar" signOut={Auth.signOut} />
+          {!validAuth ? (
+            <Home path="/" signIn={Auth.signIn} />
+          ) : (
+            <Calendar path="/" signOut={Auth.signOut} />
+          )}
         </Router>
       </div>
     );

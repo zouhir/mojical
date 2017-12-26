@@ -47,7 +47,7 @@ const calendarPageDays = (month, year) => {
 };
 
 const monthToString = index => {
-  return MONTHS[index] || null;
+  return MONTHS[index - 1] || null;
 };
 
 export { calendarPageDays, monthToString };
