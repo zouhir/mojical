@@ -1,62 +1,45 @@
 {
-  "rewrites": [
-    {
-      "source": "**",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "**",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, no-cache"
-        },
-        {
-          "key": "Access-Control-Max-Age",
-          "value": "600"
-        }
-      ]
-    },
-    {
-      "source": "/sw.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "private, no-cache"
-        }
-      ]
-    },
-    {
-      "source": "**/*.chunk.*.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000"
-        }
-      ]
-    },
-    {
-      "source": "/",
-      "headers": [
-        {
-          "key": "Link",
-          "value":
-            "</bundle.e023b.js>; rel=preload; as=script, </style.0032d.css>; rel=preload; as=style, </route-home.chunk.1fa01.js>; rel=preload; as=script"
-        }
-      ]
-    },
-    {
-      "source": "/calendar",
-      "headers": [
-        {
-          "key": "Link",
-          "value":
-            "</bundle.e023b.js>; rel=preload; as=script, </style.0032d.css>; rel=preload; as=style, </route-calendar.chunk.f99ed.js>; rel=preload; as=script"
-        }
-      ]
-    }
-  ],
-  "public": "build"
+  "hosting": {
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600, no-cache"
+          },
+          {
+            "key": "Access-Control-Max-Age",
+            "value": "600"
+          }
+        ]
+      },
+      {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "private, no-cache"
+          }
+        ]
+      },
+      {
+        "source": "**/*.chunk.*.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000"
+          }
+        ]
+      }
+    ]
+  }
 }

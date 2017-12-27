@@ -1,7 +1,5 @@
 import firebase from "../lib/firebase";
 
-let storage = window.localStorage;
-
 export default class Auth {
   static authInstance() {
     return firebase.auth();
