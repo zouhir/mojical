@@ -30,6 +30,17 @@ button[disabled] {
     display: block;
     border-radius: 50%;
   }
+  @include breakpoint(xs) {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  @include breakpoint(xs) {
+    &:before {
+      width: 42px;
+      height: 42px;
+    }
+  }
   &.today {
     font-weight: bold;
     text-decoration: underline;
@@ -46,7 +57,7 @@ button[disabled] {
     height: 100%;
     z-index: 999;
     @include breakpoint(xs) {
-      background-size: 32px;
+      background-size: 30px;
       background-position: center;
       background-repeat: no-repeat;
     }
