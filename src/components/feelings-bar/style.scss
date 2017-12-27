@@ -1,6 +1,7 @@
 .feeling {
   position: relative;
   height: 100%;
+  width: 100%;
   .back {
     position: absolute;
     height: 100%;
@@ -9,7 +10,7 @@
     top: 0;
     background: transparent;
     border: none;
-    background: url("../../assets/arrow.svg");
+    background: url("../../assets/Close.svg");
     transform: rotate(180deg);
     background-size: 12px;
     background-repeat: no-repeat;
@@ -50,14 +51,14 @@
           pointer-events: none;
         }
         &:focus:after {
-          background: #fe5196;
+          background: #1de9b6;
           opacity: 0.05;
         }
         &:active {
           outline: none;
         }
         &:active:after {
-          background: #fe5196;
+          background: #1de9b6;
           opacity: 0.2;
         }
         &:active:before {

@@ -4,10 +4,6 @@ import style from "./style.scss";
 import Header from "../calender-header";
 import Day from "../calendar-day";
 
-import "../../lib/database";
-
-import { monthToString } from "../../lib/calendar-utils";
-
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
 class Calendar extends Component {

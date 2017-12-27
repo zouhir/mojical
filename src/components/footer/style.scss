@@ -6,14 +6,24 @@
   width: 100%;
   font-size: 0;
   display: flex;
-  flex: 0 0 70px;
+  flex: 0 0 80px;
   position: relative;
   z-index: 9;
+  &:before {
+    content: "";
+    height: 10px;
+    top: -10px;
+    width: 100%;
+    position: absolute;
+    background: #474b4e;
+  }
   .container {
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
-    height: 50px;
+    height: 80px;
+    display: flex;
+    align-items: center;
   }
 }
 
