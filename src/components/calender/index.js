@@ -8,7 +8,7 @@ import "../../lib/database";
 
 import { monthToString } from "../../lib/calendar-utils";
 
-const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
+const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
 class Calendar extends Component {
   emptyDaysList = ln => {
@@ -29,13 +29,6 @@ class Calendar extends Component {
   }) {
     return (
       <div className={style.cal}>
-        <Header
-          month={
-            selectedDate ? monthToString(selectedDate.month) : "loading..."
-          }
-          incrementMonth={incrementMonth}
-          decrementMonth={decrementMonth}
-        />
         <section>
           <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
           <ul className={style.body}>

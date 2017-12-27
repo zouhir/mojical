@@ -35,22 +35,28 @@ let actions = store => ({
     };
   },
   decrementMonth(state) {
-    let year = state.selectedDate.year;
-    let month = state.selectedDate.month - 1;
-    if (month >= 0)
+    let { year, month } = state.selectedDate;
+    month = month - 1;
+    let calendar = {};
+    calendar[year] = state.calendar[year] || {};
+    calendar[year][month] = DateUtils.monthDays(year, month);
+    if (month > 0)
       return {
         monthStartDay: DateUtils.monthStartDay(year, month),
-        calendar: DateUtils.monthDays(year, month),
+        calendar: calendar,
         selectedDate: { year, month, day: null }
       };
   },
   incrementMonth(state) {
-    let year = state.selectedDate.year;
-    let month = state.selectedDate.month + 1;
-    if (month < 12)
+    let { year, month } = state.selectedDate;
+    month = month + 1;
+    let calendar = {};
+    calendar[year] = state.calendar[year] || {};
+    calendar[year][month] = DateUtils.monthDays(year, month);
+    if (month <= 12)
       return {
         monthStartDay: DateUtils.monthStartDay(year, month),
-        calendar: DateUtils.monthDays(year, month),
+        calendar: calendar,
         selectedDate: { year, month, day: null }
       };
   },

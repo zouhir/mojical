@@ -1,0 +1,16 @@
+.pageHeader {
+  height: 70px;
+  width: 100%;
+  margin-bottom: 5px;
+  display: flex;
+  background: #fff;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.01);
+  .menu {
+    width: 120px;
+    background-image: url("../../assets/menu.svg");
+    background-position: 20px center;
+    background-color: #ff5722;
+    background-repeat: no-repeat;
+    border: none;
+  }
+}

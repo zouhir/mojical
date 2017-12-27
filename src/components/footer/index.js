@@ -8,22 +8,7 @@ import Stats from "../Icons/Stats";
 import Activiyt from "../Icons/Activity";
 import Menu from "../Icons/Menu";
 
-const FooterNav = () => (
-  <div className={style.footerNav}>
-    <button>
-      <NavCal />
-    </button>
-    <button>
-      <Activiyt />
-    </button>
-    <button>
-      <Stats />
-    </button>
-    <button>
-      <Menu />
-    </button>
-  </div>
-);
+const FooterNav = () => <div className={style.footerNav} />;
 
 export default class Footer extends Component {
   render({ selectedDate, resetDaySelection }) {

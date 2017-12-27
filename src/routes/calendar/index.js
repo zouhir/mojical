@@ -4,6 +4,8 @@ import style from "./style.scss";
 // components
 import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
+import Gallery from "../../components/gallery";
+import PageHeader from "../../components/page-header";
 
 // util
 import feelingsService from "../../services/feelings";
@@ -67,21 +69,21 @@ class CalendarPage extends Component {
   }) {
     return (
       <div className={style.calendar}>
-        <div className={style.cardContainer}>
-          <div className={style.mainCard}>
-            {selectedDate && (
-              <Calendar
-                selectedDate={selectedDate}
-                userDeviceDate={today}
-                monthFillers={monthStartDay}
-                calendarPage={calendar[selectedDate.year][selectedDate.month]}
-                incrementMonth={incrementMonth}
-                decrementMonth={decrementMonth}
-                selectDate={selectDate}
-              />
-            )}
+        <PageHeader />
+        <Gallery />
+        {selectedDate && (
+          <div className={style.paddedCalendar}>
+            <Calendar
+              selectedDate={selectedDate}
+              userDeviceDate={today}
+              monthFillers={monthStartDay}
+              calendarPage={calendar[selectedDate.year][selectedDate.month]}
+              incrementMonth={incrementMonth}
+              decrementMonth={decrementMonth}
+              selectDate={selectDate}
+            />
           </div>
-        </div>
+        )}
         <Footer
           postFeeling={this.postFeeling}
           selectedDate={selectedDate}

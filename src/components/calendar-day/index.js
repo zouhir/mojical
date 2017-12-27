@@ -31,12 +31,15 @@ const Day = ({
             day: day
           })
         }
-        style={
-          feeling
-            ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }
-            : {}
-        }
       >
+        <div
+          className={style.feeling}
+          style={
+            feeling
+              ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }
+              : {}
+          }
+        />
         <span>{day}</span>
       </button>
     );
