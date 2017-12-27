@@ -10,11 +10,13 @@
     "dev": "preact watch",
     "lint": "eslint src",
     "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watchAll"
+    "test:watch": "NODE_ENV=test jest --watchAll",
+    "deploy:stg":
+      "NODE_ENV=staging npm run build && firebase deploy -P default",
+    "deploy:prd":
+      "NODE_ENV=production npm run build && firebase deploy -P production"
   },
-  "eslintIgnore": [
-    "build/*"
-  ],
+  "eslintIgnore": ["build/*"],
   "devDependencies": {
     "classnames": "^2.2.5",
     "eslint": "^4.5.0",

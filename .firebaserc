@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "dev-mojical-pwa"
+    "default": "dev-mojical-pwa",
+    "production": "mojical-pwa"
   }
 }
