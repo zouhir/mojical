@@ -2,5 +2,11 @@
   display: flex;
   flex: 1;
   width: 100%;
-  // background: url("../../assets/sample-bg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: blur(25px);
+  &.loaded {
+    filter: none;
+  }
 }
