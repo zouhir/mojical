@@ -55,7 +55,7 @@ class App extends Component {
     return (
       <div id="app">
         <Router onChange={this.handleRoute}>
-          {validAuth ? (
+          {!validAuth ? (
             <Home path="/" signIn={Auth.signIn} />
           ) : (
             <Calendar path="/" signOut={Auth.signOut} />
