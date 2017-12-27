@@ -1,16 +1,36 @@
 .button {
-  width: 100%;
-  background: #ffffff;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-  color: #f77062;
+  color: #ffffff;
+  background: #ff5722;
   display: block;
   text-align: center;
   height: 42px;
   text-transform: uppercase;
-  line-height: 42px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0px 20px;
+  font-family: "Source Sans Pro", sans-serif;
+  box-shadow: 0 10px 20px 0 rgba(255, 87, 34, 0.2);
+  position: relative;
+  z-index: 99;
+  box-sizing: border-box;
+  &:before {
+    content: "";
+    height: 52px;
+    position: absolute;
+    background: #ff5722;
+
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    z-index: -1;
+    opacity: 0;
+  }
+  &:focus,
+  &:active {
+    &:before {
+      opacity: 0.2;
+    }
+  }
 }
 
 a.button {
@@ -18,4 +38,5 @@ a.button {
 }
 button.button {
   border: 0;
+  outline: none;
 }

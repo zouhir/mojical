@@ -1,14 +1,23 @@
 .home {
-  padding: 100px 20px 56px 20px;
+  padding: 0px 0px 100px 15px;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   position: absolute;
   top: 0;
   left: 0;
+  background-image: url("../../assets/bg.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  h2 {
+    margin-bottom: 10px;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
 }
 
 .auth {

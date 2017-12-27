@@ -1,20 +1,10 @@
-.logo {
-  width: 128px;
-  position: relative;
-  height: 128px;
-  display: flex;
-  justify-self: flex-start;
-}
-.logo svg {
-  width: 128px;
-}
+.loginCard {
+  width: 100%;
+  background: #ffffff;
+  box-shadow: 0 10px 70px 0 rgba(0, 0, 0, 0.7);
 
-.moji {
-  position: absolute;
-  bottom: -3px;
-  right: -3px;
-  width: 46px;
-  height: 46px;
-  background-size: cover;
-  background-repeat: no-repeat;
+  color: #474b4e;
+  margin-right: -15px;
+  margin-top: auto;
+  padding: 20px;
 }
