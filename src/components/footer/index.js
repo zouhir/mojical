@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-
+import cx from "classnames";
 import style from "./style.scss";
 import FeelingsBar from "../feelings-bar";
 
@@ -11,9 +11,9 @@ import Menu from "../Icons/Menu";
 const FooterNav = () => <div className={style.footerNav} />;
 
 export default class Footer extends Component {
-  render({ selectedDate, resetDaySelection }) {
+  render({ selectedDate, resetDaySelection, slideUp }) {
     return (
-      <div className={style.footer}>
+      <div className={cx(style.footer, slideUp && style.slide)}>
         <div className={style.container}>
           {selectedDate && selectedDate.day === null && <FooterNav />}
           {selectedDate &&

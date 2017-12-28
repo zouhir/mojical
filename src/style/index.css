@@ -22,5 +22,5 @@ body {
   min-height: 100%;
   background: #232627;
   position: relative;
-  padding-bottom: 60px;
+  overflow: hidden;
 }

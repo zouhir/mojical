@@ -1,22 +1,30 @@
 // refactor from CSS to Scss
 @import "../../style/helpers.scss";
-
 .calendar {
-  min-height: 100%;
   width: 100%;
   height: 100%;
-  max-width: 800px;
   position: absolute;
   top: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
+  left: 0;
+  max-width: 800px;
+  .slider {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.2s linear;
+    position: relative;
+    z-index: 800;
+    &.slide {
+      transform: translateY(-70px);
+    }
+  }
   .paddedCalendar {
     position: relative;
     z-index: 99;
-    padding: 0px 10px;
+    padding: 10px;
     @include breakpoint(md) {
-      padding: 0px 15px;
+      padding: 15px;
     }
   }
 }

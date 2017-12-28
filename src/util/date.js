@@ -5,7 +5,8 @@ const MONTH_START = 1;
 
 class dateUtils {
   static monthStartDay(year, month) {
-    return getDay(new Date(year, month, MONTH_START));
+    let monthIndex = month - 1;
+    return getDay(new Date(year, monthIndex, MONTH_START));
   }
 
   static monthDays(year, month) {

@@ -4,6 +4,8 @@ import { Router, route } from "preact-router";
 // routes
 import Home from "async!../routes/home";
 import Calendar from "async!../routes/calendar";
+import PageHeader from "./page-header";
+
 // util
 import Auth from "../util/auth";
 // store
@@ -54,6 +56,7 @@ class App extends Component {
   render({}, { validAuth }) {
     return (
       <div id="app">
+        <PageHeader />
         <Router onChange={this.handleRoute}>
           {!validAuth ? (
             <Home path="/" signIn={Auth.signIn} />

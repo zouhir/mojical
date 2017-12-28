@@ -1,11 +1,10 @@
 import { h, Component } from "preact";
 import style from "./style.scss";
-
+import cx from "classnames";
 // components
 import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
 import Gallery from "../../components/gallery";
-import PageHeader from "../../components/page-header";
 
 // util
 import feelingsService from "../../services/feelings";
@@ -20,7 +19,8 @@ import { actions } from "../../store";
 )
 class CalendarPage extends Component {
   state = {
-    loading: true
+    loading: true,
+    slideUp: false
   };
   componentDidMount() {
     console.log("mounted");
@@ -55,39 +55,53 @@ class CalendarPage extends Component {
       .then(r => console.log(r));
   };
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.selectedDate.day) {
+      this.setState({ slideUp: true });
+    } else {
+      this.setState({ slideUp: false });
+    }
+  }
+
   // Note: `user` comes from the URL, courtesy of our router
-  render({
-    user,
-    today,
-    selectedDate,
-    selectDate,
-    monthStartDay,
-    calendar,
-    incrementMonth,
-    decrementMonth,
-    resetDaySelection
-  }) {
+  render(
+    {
+      user,
+      today,
+      selectedDate,
+      selectDate,
+      monthStartDay,
+      calendar,
+      incrementMonth,
+      decrementMonth,
+      resetDaySelection
+    },
+    { slideUp }
+  ) {
+    let slidingCalClasses = cx(style.slider, slideUp && style.slide);
     return (
       <div className={style.calendar}>
-        <PageHeader />
-        <Gallery />
-        {selectedDate && (
-          <div className={style.paddedCalendar}>
-            <Calendar
-              selectedDate={selectedDate}
-              userDeviceDate={today}
-              monthFillers={monthStartDay}
-              calendarPage={calendar[selectedDate.year][selectedDate.month]}
-              incrementMonth={incrementMonth}
-              decrementMonth={decrementMonth}
-              selectDate={selectDate}
-            />
-          </div>
-        )}
+        <div className={slidingCalClasses}>
+          <Gallery />
+          {selectedDate && (
+            <div className={style.paddedCalendar}>
+              <Calendar
+                selectedDate={selectedDate}
+                userDeviceDate={today}
+                monthFillers={monthStartDay}
+                calendarPage={calendar[selectedDate.year][selectedDate.month]}
+                incrementMonth={incrementMonth}
+                decrementMonth={decrementMonth}
+                selectDate={selectDate}
+              />
+            </div>
+          )}
+        </div>
         <Footer
           postFeeling={this.postFeeling}
           selectedDate={selectedDate}
           resetDaySelection={resetDaySelection}
+          slideUp={slideUp}
         />
       </div>
     );

@@ -2,13 +2,15 @@
   width: 100%;
   background: #474b4e;
   box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.1);
-  bottom: 0;
+  bottom: -90px;
   width: 100%;
   font-size: 0;
   display: flex;
-  flex: 0 0 80px;
-  position: relative;
-  z-index: 9;
+  position: absolute;
+  transition: bottom 0.2s linear;
+  &.slide {
+    bottom: 0;
+  }
   &:before {
     content: "";
     height: 10px;
