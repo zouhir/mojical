@@ -1,5 +1,12 @@
 import idb from "idb";
 
+/**
+ * if (newProps.lastSync && newProps.user.uid) {
+      let odb = offlinedb(newProps.user.uid, "feeling");
+      odb.set("calendar", newProps.calendar);
+    }
+ */
+
 const FEELINGS_KEY = "feelings";
 const ACTIVITY_KEY = "activity";
 
@@ -32,6 +39,7 @@ function OfflineDb(uid, entity) {
             resolve(tx.complete);
           })
           .catch(error => {
+            console.log(error);
             reject(error);
           });
       });

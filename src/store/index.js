@@ -6,7 +6,8 @@ let store = createStore({
   today: null,
   selectedDate: null,
   monthStartDay: null,
-  calendar: {}
+  calendar: {},
+  lastSync: null
 });
 
 let actions = store => ({
@@ -60,14 +61,17 @@ let actions = store => ({
         selectedDate: { year, month, day: null }
       };
   },
-  setFeelinginCalendar(state, { year, month, day, response }) {
+  setFeelinginCalendar(state, { year, month, day, response, lastSync }) {
     // TODO: make it pure
     let newCal = Object.assign({}, state.calendar);
     Object.keys(response).forEach(k => {
-      newCal[year][month][k].feeling = response[k].feeling;
+      if (response[k]) {
+        newCal[year][month][k].feeling = response[k].feeling;
+      }
     });
     return {
-      calendar: newCal
+      calendar: newCal,
+      lastSync
     };
   }
 });

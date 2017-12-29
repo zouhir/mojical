@@ -1,21 +1,6 @@
 import getDaysInMonth from "date-fns/get_days_in_month";
 import getDay from "date-fns/get_day";
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
-
 const calendarPageDays = (month, year) => {
   let cache = {};
 

@@ -12,9 +12,7 @@ import Auth from "../util/auth";
 import { connect } from "unistore/preact";
 import { actions } from "../store";
 
-import offlinedb from "../util/offline-db";
-
-@connect([], actions)
+@connect(["selectedDate"], actions)
 class App extends Component {
   state = {
     validAuth: false
@@ -43,20 +41,16 @@ class App extends Component {
         this.setState({ validAuth: false });
       }
     });
-
-    let odb = offlinedb("123", "feelings");
-    odb.set("latest", { hello: "world" });
-    // odb.getFeeling();
   }
 
   handleRoute = e => {
     this.currentUrl = e.url;
   };
 
-  render({}, { validAuth }) {
+  render({ selectedDate }, { validAuth }) {
     return (
       <div id="app">
-        <PageHeader />
+        <PageHeader selectedDate={selectedDate} />
         <Router onChange={this.handleRoute}>
           {!validAuth ? (
             <Home path="/" signIn={Auth.signIn} />

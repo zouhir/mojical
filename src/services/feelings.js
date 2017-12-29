@@ -1,6 +1,5 @@
 import fetch from "unfetch";
 import config from "../config";
-import offlinedb from "../util/offline-db";
 
 class feelingsService {
   static post({ uid, year, month, day, feeling }, online, token) {

@@ -6,6 +6,12 @@
   justify-content: center;
   flex-direction: column;
   box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5);
+  &.before {
+    animation: calBefore 0.5s forwards;
+  }
+  &.after {
+    animation: calAfter 0.5s forwards;
+  }
   ul {
     padding: 0;
     margin: 0;

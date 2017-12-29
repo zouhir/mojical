@@ -14,7 +14,7 @@ import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
 @connect(
-  ["user", "today", "selectedDate", "monthStartDay", "calendar"],
+  ["user", "today", "lastSync", "selectedDate", "monthStartDay", "calendar"],
   actions
 )
 class CalendarPage extends Component {
@@ -23,7 +23,6 @@ class CalendarPage extends Component {
     slideUp: false
   };
   componentDidMount() {
-    console.log("mounted");
     let date = new Date();
     let day = date.getDate();
     let month = date.getMonth() + 1;
@@ -36,7 +35,13 @@ class CalendarPage extends Component {
     feelingsService
       .get({ uid, year, month: month }, authToken)
       .then(response => {
-        this.props.setFeelinginCalendar({ year, month, day, response });
+        this.props.setFeelinginCalendar({
+          year,
+          month,
+          day,
+          response,
+          lastSync: Date.now()
+        });
       });
   }
 
@@ -84,7 +89,7 @@ class CalendarPage extends Component {
         <div className={slidingCalClasses}>
           <Gallery />
           {selectedDate && (
-            <div className={style.paddedCalendar}>
+            <section className={style.paddedCalendar}>
               <Calendar
                 selectedDate={selectedDate}
                 userDeviceDate={today}
@@ -94,7 +99,7 @@ class CalendarPage extends Component {
                 decrementMonth={decrementMonth}
                 selectDate={selectDate}
               />
-            </div>
+            </section>
           )}
         </div>
         <Footer
