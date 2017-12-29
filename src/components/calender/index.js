@@ -28,6 +28,15 @@ class Calendar extends Component {
     });
   };
 
+  componentWillUnmount() {
+    draggableCalendar.addEventListener("mousedown", this.startDrag);
+    draggableCalendar.addEventListener("touchstart", this.startDrag);
+    draggableCalendar.addEventListener("mousemove", this.drag);
+    draggableCalendar.addEventListener("touchmove", this.drag);
+    draggableCalendar.addEventListener("mouseup", this.stopDrag);
+    draggableCalendar.addEventListener("touchend", this.stopDrag);
+  }
+
   drag = () => {
     if (!this.state.dragging) return;
     if (this.props.selectedDate.day) return;
@@ -37,16 +46,17 @@ class Calendar extends Component {
     requestAnimationFrame(() => {
       this.base.style.transform = `translateX(${Math.round(deltaX)}px)`;
     });
-
     event.preventDefault();
     event.stopPropagation();
   };
 
   stopDrag = () => {
     if (!this.state.dragging) return;
+    if (this.props.selectedDate.day) return;
     this.setState({ dragging: false });
     let { deltaX } = this.state;
     let absDeltaX = Math.abs(deltaX);
+    if (!absDeltaX) return;
     if (absDeltaX < 40) {
       requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
@@ -64,9 +74,9 @@ class Calendar extends Component {
       requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
-          this.base.style.transition = `transform 0.2s ease-out`;
+          this.base.style.transition = `transform 0.3s ease-out`;
           this.base.style.transform = `translateX(${
-            right ? `+150vw` : `-150vw`
+            right ? `+120vw` : `-120vw`
           })`;
           return transitionEndPromise(this.base);
         })
@@ -80,15 +90,20 @@ class Calendar extends Component {
           return requestAnimationFramePromise();
         })
         .then(_ => {
+          /**
+           * change month
+           */
+        })
+        .then(_ => {
           console.log();
           this.base.style.transform = `translateX(${
-            right ? `-150vw` : `+150vw`
+            right ? `-120vw` : `+120vw`
           })`;
           return requestAnimationFramePromise();
         })
         .then(_ => {
           this.base.style.opacity = 1;
-          this.base.style.transition = `transform 0.2s ease-in`;
+          this.base.style.transition = `transform 0.3s ease-in`;
           this.base.style.transform = `translateX(${0})`;
           return transitionEndPromise(this.base);
         })
