@@ -24,13 +24,14 @@ const Day = ({
       <button
         disabled={disabled}
         className={classes}
-        onClick={() =>
+        onClick={e => {
+          console.log("clkickkkkkkkkkkkkkkkkkkkkkkkk");
           selectDate({
             year: selectedDate.year,
             month: selectedDate.month,
             day: day
-          })
-        }
+          });
+        }}
       >
         <div
           className={style.feeling}

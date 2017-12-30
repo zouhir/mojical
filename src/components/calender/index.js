@@ -21,15 +21,9 @@ class Calendar extends Component {
     draggableCalendar.addEventListener("mouseup", this.stopDrag);
     draggableCalendar.addEventListener("touchend", this.stopDrag);
   }
-  startDrag = e => {
-    this.setState({
-      dragging: true,
-      startX: event.clientX || event.touches[0].clientX
-    });
-  };
 
   componentWillUnmount() {
-    draggableCalendar.addEventListener("mousedown", this.startDrag);
+    // draggableCalendar.addEventListener("mousedown", this.startDrag);
     draggableCalendar.addEventListener("touchstart", this.startDrag);
     draggableCalendar.addEventListener("mousemove", this.drag);
     draggableCalendar.addEventListener("touchmove", this.drag);
@@ -37,11 +31,28 @@ class Calendar extends Component {
     draggableCalendar.addEventListener("touchend", this.stopDrag);
   }
 
-  drag = () => {
+  startDrag = event => {
+    if (this.state.selectedDate && this.state.selectedDate.day) {
+      return this.setState({
+        dragging: false,
+        startX: null
+      });
+    }
+    this.setState({
+      dragging: true,
+      startX: event.clientX || event.touches[0].clientX
+    });
+  };
+
+  drag = event => {
     if (!this.state.dragging) return;
     if (this.props.selectedDate.day) return;
     let deltaX =
       (event.clientX || event.touches[0].clientX) - this.state.startX;
+    if (Math.abs(deltaX) < 5) {
+      console.log("start calcennled ");
+      return;
+    }
     this.setState({ deltaX });
     requestAnimationFrame(() => {
       this.base.style.transform = `translateX(${Math.round(deltaX)}px)`;
@@ -50,14 +61,12 @@ class Calendar extends Component {
     event.stopPropagation();
   };
 
-  stopDrag = () => {
+  stopDrag = event => {
     if (!this.state.dragging) return;
-    if (this.props.selectedDate.day) return;
-    this.setState({ dragging: false });
     let { deltaX } = this.state;
+    this.setState({ dragging: false, deltaX: null });
     let absDeltaX = Math.abs(deltaX);
-    if (!absDeltaX) return;
-    if (absDeltaX < 40) {
+    if (this.props.selectedDate.day || !absDeltaX || absDeltaX < 40) {
       requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
@@ -66,10 +75,10 @@ class Calendar extends Component {
           return transitionEndPromise(this.base);
         })
         .then(_ => {
-          console.log("stopped trranbsition");
           this.base.style.transition = "";
         });
     } else {
+      console.log(deltaX);
       let right = deltaX > 0 ? true : false;
       requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
@@ -81,11 +90,9 @@ class Calendar extends Component {
           return transitionEndPromise(this.base);
         })
         .then(_ => {
-          console.log("stopped trranbsition");
           this.base.style.transition = "";
         })
         .then(_ => {
-          console.log("opacity 0");
           this.base.style.opacity = 0;
           return requestAnimationFramePromise();
         })
@@ -95,7 +102,6 @@ class Calendar extends Component {
            */
         })
         .then(_ => {
-          console.log();
           this.base.style.transform = `translateX(${
             right ? `-120vw` : `+120vw`
           })`;
