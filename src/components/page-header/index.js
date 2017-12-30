@@ -17,7 +17,7 @@ const MONTHS = [
   "December"
 ];
 
-const PageHeader = ({ selectedDate }) => {
+const PageHeader = ({ validAuth, selectedDate }) => {
   let month = -1;
   if (selectedDate) {
     month = selectedDate.month;
@@ -25,20 +25,22 @@ const PageHeader = ({ selectedDate }) => {
   return (
     <header className={style.pageHeader}>
       <button className={style.menu} />
-      <select
-        name="text"
-        onChange={e => {
-          console.log(e.target.selectedIndex);
-        }}
-      >
-        {MONTHS.map((m, i) => {
-          return (
-            <option value={m} selected={i === month - 1}>
-              {m}
-            </option>
-          );
-        })}
-      </select>
+      {validAuth && (
+        <select
+          name="text"
+          onChange={e => {
+            console.log(e.target.selectedIndex);
+          }}
+        >
+          {MONTHS.map((m, i) => {
+            return (
+              <option value={m} selected={i === month - 1}>
+                {m}
+              </option>
+            );
+          })}
+        </select>
+      )}
     </header>
   );
 };

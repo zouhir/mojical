@@ -50,7 +50,7 @@ class App extends Component {
   render({ selectedDate }, { validAuth }) {
     return (
       <div id="app">
-        <PageHeader selectedDate={selectedDate} />
+        <PageHeader selectedDate={selectedDate} validAuth={validAuth} />
         <Router onChange={this.handleRoute}>
           {!validAuth ? (
             <Home path="/" signIn={Auth.signIn} />
