@@ -5,6 +5,7 @@ import cx from "classnames";
 import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
 import Gallery from "../../components/gallery";
+import PageHeader from "../../components/page-header";
 
 // util
 import feelingsService from "../../services/feelings";
@@ -79,28 +80,36 @@ class CalendarPage extends Component {
       calendar,
       incrementMonth,
       decrementMonth,
-      resetDaySelection
+      resetDaySelection,
+      path,
+      toggleNav
     },
     { slideUp }
   ) {
     let slidingCalClasses = cx(style.slider, slideUp && style.slide);
     return (
       <div className={style.calendar}>
+        <PageHeader
+          toggleNav={toggleNav}
+          selectedDate={selectedDate}
+          path={path}
+        />
         <div className={slidingCalClasses}>
           <Gallery />
-          {selectedDate && (
-            <section className={style.paddedCalendar}>
-              <Calendar
-                selectedDate={selectedDate}
-                userDeviceDate={today}
-                monthFillers={monthStartDay}
-                calendarPage={calendar[selectedDate.year][selectedDate.month]}
-                incrementMonth={incrementMonth}
-                decrementMonth={decrementMonth}
-                selectDate={selectDate}
-              />
-            </section>
-          )}
+          {selectedDate.year &&
+            selectedDate.month && (
+              <section className={style.paddedCalendar}>
+                <Calendar
+                  selectedDate={selectedDate}
+                  userDeviceDate={today}
+                  monthFillers={monthStartDay}
+                  calendarPage={calendar[selectedDate.year][selectedDate.month]}
+                  incrementMonth={incrementMonth}
+                  decrementMonth={decrementMonth}
+                  selectDate={selectDate}
+                />
+              </section>
+            )}
         </div>
         <Footer
           postFeeling={this.postFeeling}

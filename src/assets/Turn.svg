@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/Turn</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8.0174618,0 C4.00523854,0 0.68450265,2.941 0.0957904584,6.78 C0.079825382,6.852 0.0708450265,6.925 0.0708450265,7 C0.0708450265,7.552 0.518864983,8 1.07265357,8 C1.9407546,8 2.05550359,7.234 2.05550359,7.234 C2.4316807,4.282 4.95715622,2 8.0174618,2 C11.3192392,2 14.0043655,4.691 14.0043655,8 C14.0043655,11.309 11.3192392,14 8.0174618,14 C6.35609604,14 4.85338322,13.329 3.76576239,12.242 L5.30140318,10.71 C5.70053009,10.312 5.56782039,10 5.02001871,10 L0.491923916,10 C0.228500156,10 0,10.22 0,10.491 L0,15.009 C0,15.549 0.315310259,15.686 0.704458996,15.297 L2.34786405,13.657 C3.79869036,15.104 5.80330527,16 8.0174618,16 L8.0174618,16 C12.4198316,16 16,12.411 16,8 C16,3.589 12.4188338,0 8.0174618,0" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/Turn">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Fill-1" fill="#231F20" xlink:href="#path-1"></use>
+            <g id="↳Tint/Grey" mask="url(#mask-2)" fill="#D0D0D0">
+                <rect id="Color" x="0" y="0" width="16" height="16"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

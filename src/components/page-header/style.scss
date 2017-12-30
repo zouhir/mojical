@@ -2,11 +2,12 @@
   height: 70px;
   width: 100%;
   display: flex;
+  align-items: center;
   background: #fff;
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.01);
   position: fixed;
   top: 0;
-  z-index: 1000;
+  z-index: 998;
   .menu {
     width: 120px;
     background-image: url("../../assets/menu.svg");
@@ -14,14 +15,25 @@
     background-color: #ff5722;
     background-repeat: no-repeat;
     border: none;
+    height: 100%;
   }
   select {
-    margin-left: 10px;
+    padding-left: 10px;
     background-color: transparent;
     background-repeat: no-repeat;
     font-size: 16px;
     color: #474b4e;
     border: none;
     padding-right: 14px;
+    height: 100%;
+  }
+  .quickAction {
+    margin-left: auto;
+    width: 50px;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    background-color: transparent;
   }
 }

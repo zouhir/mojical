@@ -4,7 +4,11 @@ import DateUtils from "../util/date";
 let store = createStore({
   user: null,
   today: null,
-  selectedDate: null,
+  selectedDate: {
+    year: null,
+    month: null,
+    day: null
+  },
   monthStartDay: null,
   calendar: {},
   lastSync: null

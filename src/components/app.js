@@ -4,7 +4,8 @@ import { Router, route } from "preact-router";
 // routes
 import Home from "async!../routes/home";
 import Calendar from "async!../routes/calendar";
-import PageHeader from "./page-header";
+
+import NavMenu from "../components/nav-menu";
 
 // util
 import Auth from "../util/auth";
@@ -12,10 +13,14 @@ import Auth from "../util/auth";
 import { connect } from "unistore/preact";
 import { actions } from "../store";
 
-@connect(["selectedDate"], actions)
+@connect(["user", "selectedDate"], actions)
 class App extends Component {
   state = {
-    validAuth: false
+    validAuth: false,
+    showNav: false
+  };
+  toggleNav = () => {
+    this.setState({ showNav: !this.state.showNav });
   };
   componentDidMount() {
     Auth.authInstance().onAuthStateChanged(user => {
@@ -47,15 +52,21 @@ class App extends Component {
     this.currentUrl = e.url;
   };
 
-  render({ selectedDate }, { validAuth }) {
+  render({ selectedDate, user }, { validAuth, showNav }) {
     return (
       <div id="app">
-        <PageHeader selectedDate={selectedDate} validAuth={validAuth} />
+        {user && (
+          <NavMenu user={user} toggleNav={this.toggleNav} showNav={showNav} />
+        )}
         <Router onChange={this.handleRoute}>
-          {!validAuth ? (
+          {!user ? (
             <Home path="/" signIn={Auth.signIn} />
           ) : (
-            <Calendar path="/" signOut={Auth.signOut} />
+            <Calendar
+              toggleNav={this.toggleNav}
+              path="/"
+              signOut={Auth.signOut}
+            />
           )}
         </Router>
       </div>
