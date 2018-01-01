@@ -26,10 +26,10 @@
     padding: 10px;
     .shadow {
       position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
       box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5);
     }
     .singleCal {
@@ -39,9 +39,6 @@
       display: flex;
       flex: row;
       flex-wrap: nowrap;
-    }
-    @include breakpoint(md) {
-      padding: 15px;
     }
   }
 }

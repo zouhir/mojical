@@ -48,8 +48,8 @@ class CalendarPage extends Component {
       });
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
     let paddedCalendarElWidth = paddedCalendarEl.offsetWidth;
-    this.setState({ transformBasePx: paddedCalendarElWidth - 15 });
-    paddedCalendarElWidth -= 30;
+    this.setState({ transformBasePx: paddedCalendarElWidth - 10 });
+    paddedCalendarElWidth -= 20;
     let allCalendarsEl = this.base.querySelector("#allCalendars");
     allCalendarsEl.style.width = paddedCalendarElWidth * 12 + "px";
     allCalendarsEl.addEventListener("mousedown", e =>
