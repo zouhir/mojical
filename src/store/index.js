@@ -9,9 +9,9 @@ let store = createStore({
     month: null,
     day: null
   },
-  monthStartDay: null,
+  monthStartDays: null,
   calendar: {},
-  lastSync: null
+  lastSync: {}
 });
 
 let actions = store => ({
@@ -20,12 +20,10 @@ let actions = store => ({
   },
   setToday(state, { year, month, day }) {
     let calendar = {};
-    calendar[year] = state.calendar[year] || {};
-    calendar[year][month] = DateUtils.monthDays(year, month);
     return {
       today: { year, month, day },
-      monthStartDay: DateUtils.monthStartDay(year, month),
-      calendar: calendar,
+      monthStartDays: DateUtils.populateMonthStartDays(year),
+      calendar: DateUtils.populateCalendar(year),
       selectedDate: { year, month, day: null }
     };
   },
@@ -42,35 +40,26 @@ let actions = store => ({
   decrementMonth(state) {
     let { year, month } = state.selectedDate;
     month = month - 1;
-    let calendar = {};
-    calendar[year] = state.calendar[year] || {};
-    calendar[year][month] = DateUtils.monthDays(year, month);
-    if (month > 0)
-      return {
-        monthStartDay: DateUtils.monthStartDay(year, month),
-        calendar: calendar,
-        selectedDate: { year, month, day: null }
-      };
+    return {
+      selectedDate: { year, month, day: null }
+    };
   },
   incrementMonth(state) {
     let { year, month } = state.selectedDate;
     month = month + 1;
-    let calendar = {};
-    calendar[year] = state.calendar[year] || {};
-    calendar[year][month] = DateUtils.monthDays(year, month);
     if (month <= 12)
       return {
-        monthStartDay: DateUtils.monthStartDay(year, month),
-        calendar: calendar,
         selectedDate: { year, month, day: null }
       };
   },
-  setFeelinginCalendar(state, { year, month, day, response, lastSync }) {
+  setFeelinginCalendar(state, { month, day, response, lastSync }) {
+    if (!response) return;
     // TODO: make it pure
     let newCal = Object.assign({}, state.calendar);
+
     Object.keys(response).forEach(k => {
       if (response[k]) {
-        newCal[year][month][k].feeling = response[k].feeling;
+        newCal[month][k].feeling = response[k].feeling;
       }
     });
     return {

@@ -11,7 +11,6 @@ class NavMenu extends Component {
   }
   toggleNav = e => {
     let nav = this.base.getElementsByClassName(style.offscreenNav)[0];
-    console.log(e.target.className);
     if (e.target.className.indexOf(style.offscreenCanvas) > -1) {
       this.props.toggleNav();
     }

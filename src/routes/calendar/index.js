@@ -15,13 +15,15 @@ import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
 @connect(
-  ["user", "today", "lastSync", "selectedDate", "monthStartDay", "calendar"],
+  ["user", "today", "lastSync", "selectedDate", "monthStartDays", "calendar"],
   actions
 )
 class CalendarPage extends Component {
   state = {
     loading: true,
-    slideUp: false
+    slideUp: false,
+    transformBasePx: 0,
+    currentTransform: 0
   };
   componentDidMount() {
     let date = new Date();
@@ -44,6 +46,151 @@ class CalendarPage extends Component {
           lastSync: Date.now()
         });
       });
+    let paddedCalendarEl = this.base.querySelector("#paddedCal");
+    let paddedCalendarElWidth = paddedCalendarEl.offsetWidth;
+    this.setState({ transformBasePx: paddedCalendarElWidth - 15 });
+    paddedCalendarElWidth -= 30;
+    let allCalendarsEl = this.base.querySelector("#allCalendars");
+    allCalendarsEl.style.width = paddedCalendarElWidth * 12 + "px";
+    allCalendarsEl.addEventListener("mousedown", e =>
+      this.startDrag(e, allCalendarsEl)
+    );
+    allCalendarsEl.addEventListener("touchstart", e =>
+      this.startDrag(e, allCalendarsEl)
+    );
+    allCalendarsEl.addEventListener("mousemove", e =>
+      this.drag(e, allCalendarsEl)
+    );
+    allCalendarsEl.addEventListener("touchmove", e =>
+      this.drag(e, allCalendarsEl)
+    );
+    allCalendarsEl.addEventListener("mouseup", e =>
+      this.stopDrag(e, allCalendarsEl)
+    );
+    allCalendarsEl.addEventListener("touchend", e =>
+      this.stopDrag(e, allCalendarsEl)
+    );
+  }
+
+  startDrag = (event, el) => {
+    if (this.state.selectedDate && this.state.selectedDate.day) {
+      return this.setState({
+        dragging: false,
+        startX: null
+      });
+    }
+    this.setState({
+      dragging: true,
+      startX: event.clientX || event.touches[0].clientX
+    });
+  };
+
+  drag = (event, el) => {
+    if (!this.state.dragging) return;
+    if (this.props.selectedDate.day) return;
+    let deltaX =
+      (event.clientX || event.touches[0].clientX) - this.state.startX;
+    if (Math.abs(deltaX) < 5) {
+      return;
+    }
+    let { currentTransform } = this.state;
+    this.setState({ deltaX });
+    requestAnimationFrame(() => {
+      el.style.transform = `translateX(${Math.round(
+        deltaX + currentTransform
+      )}px)`;
+    });
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  stopDrag = (event, el) => {
+    if (!this.state.dragging) return;
+    let { deltaX } = this.state;
+    this.setState({ dragging: false, deltaX: null });
+    let absDeltaX = Math.abs(deltaX);
+    let { month } = this.props.selectedDate;
+    let { transformBasePx, currentTransform } = this.state;
+    let decrement = deltaX > 0 ? true : false;
+    if (
+      !absDeltaX ||
+      absDeltaX < transformBasePx / 4 ||
+      (decrement && month === 1) ||
+      (!decrement && month === 12)
+    ) {
+      return requestAnimationFramePromise()
+        .then(_ => requestAnimationFramePromise())
+        .then(_ => {
+          el.style.transition = `transform 0.1s ease-in-out`;
+          el.style.transform = `translateX(${currentTransform}px)`;
+          return transitionEndPromise(this.base);
+        })
+        .then(_ => {
+          el.style.transition = "";
+        });
+    }
+    console.log(currentTransform);
+    console.log(transformBasePx);
+    let offset = 0;
+    if (decrement) {
+      offset = currentTransform + transformBasePx;
+    } else {
+      offset = currentTransform - transformBasePx;
+    }
+    requestAnimationFramePromise()
+      .then(_ => requestAnimationFramePromise())
+      .then(_ => {
+        el.style.transition = `transform 0.2s ease-in-out`;
+
+        el.style.transform = `translateX(${offset}px)`;
+        return transitionEndPromise(this.base);
+      })
+      .then(_ => {
+        el.style.transition = "";
+        return requestAnimationFramePromise();
+      })
+      .then(_ => {
+        this.setState({ currentTransform: offset });
+        if (decrement) {
+          return this.props.decrementMonth();
+        }
+        this.props.incrementMonth();
+      });
+  };
+
+  dragToCalendar = month => {
+    let el = this.base.querySelector("#allCalendars");
+    let { transformBasePx } = this.state;
+    let currentTransform = transformBasePx * (+month - 1) * -1;
+    requestAnimationFramePromise()
+      .then(_ => requestAnimationFramePromise())
+      .then(_ => {
+        el.style.transition = `transform 0.3s ease-out`;
+        el.style.transform = `translateX(${currentTransform}px)`;
+        return transitionEndPromise(this.base);
+      })
+      .then(_ => {
+        el.style.transition = "";
+        return requestAnimationFramePromise();
+      })
+      .then(_ => {
+        console.log(currentTransform);
+        this.setState({ currentTransform: currentTransform });
+      });
+  };
+
+  setCalendarRootEl = (key, base) => {
+    let cal = this.state.calendarsBaseEl.slice(0);
+    cal[key] = base;
+    this.setState({ calendarsBaseEl: cal });
+  };
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.selectedDate.day) {
+      this.setState({ slideUp: true });
+    } else {
+      this.setState({ slideUp: false });
+    }
   }
 
   postFeeling = feeling => {
@@ -61,14 +208,6 @@ class CalendarPage extends Component {
       .then(r => console.log(r));
   };
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.selectedDate.day) {
-      this.setState({ slideUp: true });
-    } else {
-      this.setState({ slideUp: false });
-    }
-  }
-
   // Note: `user` comes from the URL, courtesy of our router
   render(
     {
@@ -76,7 +215,7 @@ class CalendarPage extends Component {
       today,
       selectedDate,
       selectDate,
-      monthStartDay,
+      monthStartDays,
       calendar,
       incrementMonth,
       decrementMonth,
@@ -93,23 +232,32 @@ class CalendarPage extends Component {
           toggleNav={toggleNav}
           selectedDate={selectedDate}
           path={path}
+          selectDate={selectDate}
+          dragToCalendar={this.dragToCalendar}
         />
         <div className={slidingCalClasses}>
           <Gallery />
-          {selectedDate.year &&
-            selectedDate.month && (
-              <section className={style.paddedCalendar}>
-                <Calendar
-                  selectedDate={selectedDate}
-                  userDeviceDate={today}
-                  monthFillers={monthStartDay}
-                  calendarPage={calendar[selectedDate.year][selectedDate.month]}
-                  incrementMonth={incrementMonth}
-                  decrementMonth={decrementMonth}
-                  selectDate={selectDate}
-                />
-              </section>
-            )}
+          <section id="paddedCal" className={style.paddedCalendar}>
+            <div className={style.shadow} />
+            <div className={style.singleCal}>
+              <div id="allCalendars" className={style.allCalendars}>
+                {Object.keys(calendar).map((k, idx) => (
+                  <Calendar
+                    key={idx}
+                    index={idx}
+                    selectedDate={selectedDate}
+                    userDeviceDate={today}
+                    monthFillers={monthStartDays[k]}
+                    calendarPage={calendar[k]}
+                    incrementMonth={incrementMonth}
+                    decrementMonth={decrementMonth}
+                    selectDate={selectDate}
+                    setCalendarRootEl={this.setCalendarRootEl}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
         </div>
         <Footer
           postFeeling={this.postFeeling}

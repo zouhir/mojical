@@ -5,8 +5,7 @@ const MONTH_START = 1;
 
 class dateUtils {
   static monthStartDay(year, month) {
-    let monthIndex = month - 1;
-    return getDay(new Date(year, monthIndex, MONTH_START));
+    return getDay(new Date(year, month, MONTH_START));
   }
 
   static monthDays(year, month) {
@@ -19,6 +18,20 @@ class dateUtils {
       };
     }
     return daysObject;
+  }
+  static populateMonthStartDays(year) {
+    let startDaysCal = {};
+    for (let i = 1; i <= 12; i++) {
+      startDaysCal[i] = this.monthStartDay(year, /* use montrh's index*/ i - 1);
+    }
+    return startDaysCal;
+  }
+  static populateCalendar(year) {
+    let yearCal = {};
+    for (let i = 1; i <= 12; i++) {
+      yearCal[i] = this.monthDays(year, /* use montrh's index*/ i - 1);
+    }
+    return yearCal;
   }
 }
 

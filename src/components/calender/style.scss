@@ -5,7 +5,9 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5);
+  flex: 1 0 8.3333333333%;
+  margin-right: 15px;
+  opacity: 1;
   &.before {
     animation: calBefore 0.5s forwards;
   }

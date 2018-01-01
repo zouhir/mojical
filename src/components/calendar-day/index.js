@@ -25,7 +25,6 @@ const Day = ({
         disabled={disabled}
         className={classes}
         onClick={e => {
-          console.log("clkickkkkkkkkkkkkkkkkkkkkkkkk");
           selectDate({
             year: selectedDate.year,
             month: selectedDate.month,

@@ -6,15 +6,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 800px;
   .slider {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
+    max-width: 800px;
     transition: transform 0.2s linear;
     position: relative;
     z-index: 800;
+    margin: 0 auto;
     &.slide {
       transform: translateY(-70px);
     }
@@ -23,6 +24,22 @@
     position: relative;
     z-index: 99;
     padding: 10px;
+    .shadow {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5);
+    }
+    .singleCal {
+      overflow: hidden;
+    }
+    .allCalendars {
+      display: flex;
+      flex: row;
+      flex-wrap: nowrap;
+    }
     @include breakpoint(md) {
       padding: 15px;
     }

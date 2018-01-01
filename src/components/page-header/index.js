@@ -17,30 +17,39 @@ const MONTHS = [
   "December"
 ];
 
-const PageHeader = ({ toggleNav, path, validAuth, selectedDate }) => {
+const PageHeader = ({
+  selectDate,
+  toggleNav,
+  path,
+  validAuth,
+  selectedDate,
+  dragToCalendar
+}) => {
   let { month } = selectedDate;
-  let quickAction = path === "/" ? "Feed" : "Calendar";
   return (
     <header className={style.pageHeader}>
       <button className={style.menu} onClick={toggleNav} />
       <select
         name="text"
         onChange={e => {
-          console.log(e.target.selectedIndex);
+          let sd = Object.assign({}, selectedDate);
+          sd.month = e.target.value;
+          selectDate(sd);
+          dragToCalendar(sd.month);
         }}
       >
         {MONTHS.map((m, i) => {
           return (
-            <option value={m} selected={i === month - 1}>
+            <option value={i + 1} selected={i === month - 1}>
               {m}
             </option>
           );
         })}
       </select>
-      <button
+      {/* <button
         className={style.quickAction}
         style={{ backgroundImage: `url(../../assets/${quickAction}.svg)` }}
-      />
+      /> */}
     </header>
   );
 };

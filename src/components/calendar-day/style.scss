@@ -55,7 +55,6 @@ button[disabled] {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 999;
     @include breakpoint(xs) {
       background-size: 30px;
       background-position: center;
@@ -70,7 +69,6 @@ button[disabled] {
   }
   span {
     position: relative;
-    z-index: 999;
   }
   &.hasFeeling {
     background-repeat: no-repeat;
