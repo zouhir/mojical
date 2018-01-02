@@ -14,6 +14,8 @@ import feelingsService from "../../services/feelings";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
+let noSyncDelta = 0;
+
 @connect(
   ["user", "today", "lastSync", "selectedDate", "monthStartDays", "calendar"],
   actions
@@ -90,11 +92,8 @@ class CalendarPage extends Component {
     if (this.props.selectedDate.day) return;
     let deltaX =
       (event.clientX || event.touches[0].clientX) - this.state.startX;
-    if (Math.abs(deltaX) < 5) {
-      return;
-    }
     let { currentTransform } = this.state;
-    this.setState({ deltaX });
+    noSyncDelta = deltaX;
     requestAnimationFrame(() => {
       el.style.transform = `translateX(${Math.round(
         deltaX + currentTransform
@@ -106,8 +105,8 @@ class CalendarPage extends Component {
 
   stopDrag = (event, el) => {
     if (!this.state.dragging) return;
-    let { deltaX } = this.state;
-    this.setState({ dragging: false, deltaX: null });
+    let deltaX = noSyncDelta;
+    this.setState({ dragging: false });
     let absDeltaX = Math.abs(deltaX);
     let { month } = this.props.selectedDate;
     let { transformBasePx, currentTransform } = this.state;

@@ -8,11 +8,8 @@
   flex: 1 0 8.3333333333%;
   margin-right: 10px;
   opacity: 1;
-  &.before {
-    animation: calBefore 0.5s forwards;
-  }
-  &.after {
-    animation: calAfter 0.5s forwards;
+  &.inView {
+    opacity: 1;
   }
   ul {
     padding: 0;
