@@ -59,24 +59,25 @@ class CalendarPage extends Component {
     this.animationParams.transformBasePx = paddedCalendarElWidth - 10;
     paddedCalendarElWidth -= 20;
     let allCalendarsEl = this.base.querySelector("#allCalendars");
+    let innerCarouselEl = this.base.querySelector("#innerCarousel");
     allCalendarsEl.style.width = paddedCalendarElWidth * 12 + "px";
     allCalendarsEl.addEventListener("mousedown", e =>
-      this.startDrag(e, allCalendarsEl)
+      this.startDrag(e, innerCarouselEl)
     );
     allCalendarsEl.addEventListener("touchstart", e =>
-      this.startDrag(e, allCalendarsEl)
+      this.startDrag(e, innerCarouselEl)
     );
     allCalendarsEl.addEventListener("mousemove", e =>
-      this.drag(e, allCalendarsEl)
+      this.drag(e, innerCarouselEl)
     );
     allCalendarsEl.addEventListener("touchmove", e =>
-      this.drag(e, allCalendarsEl)
+      this.drag(e, innerCarouselEl)
     );
     allCalendarsEl.addEventListener("mouseup", e =>
-      this.stopDrag(e, allCalendarsEl)
+      this.stopDrag(e, innerCarouselEl)
     );
     allCalendarsEl.addEventListener("touchend", e =>
-      this.stopDrag(e, allCalendarsEl)
+      this.stopDrag(e, innerCarouselEl)
     );
   }
 
@@ -88,6 +89,8 @@ class CalendarPage extends Component {
     }
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   drag = (event, el) => {
@@ -235,9 +238,8 @@ class CalendarPage extends Component {
         <div className={slidingCalClasses}>
           <Gallery />
           <section id="paddedCal" className={style.paddedCalendar}>
-            <div className={style.shadow} />
-            <div className={style.singleCal}>
-              <div id="allCalendars" className={style.allCalendars}>
+            <div id="allCalendars" className={style.allCalendars}>
+              <div id="innerCarousel" className={style.innerCarousel}>
                 {Object.keys(calendar).map((k, idx) => (
                   <Calendar
                     key={idx}
