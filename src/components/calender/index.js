@@ -24,7 +24,6 @@ class Calendar extends Component {
     decrementMonth,
     selectDate
   }) {
-    console.log();
     let classes = cx(
       style.cal,
       index + 1 === selectedDate.month && style.inView

@@ -35,11 +35,17 @@
     }
     .singleCal {
       overflow: hidden;
+      position: relative;
+      height: 420px;
     }
     .allCalendars {
       display: flex;
       flex: row;
       flex-wrap: nowrap;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      left: 0;
     }
   }
 }

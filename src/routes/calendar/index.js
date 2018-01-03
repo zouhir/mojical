@@ -23,7 +23,12 @@ let noSyncDelta = 0;
 class CalendarPage extends Component {
   state = {
     loading: true,
-    slideUp: false,
+    slideUp: false
+  };
+  animationParams = {
+    startX: 0,
+    dragging: false,
+    deltaX: 0,
     transformBasePx: 0,
     currentTransform: 0
   };
@@ -50,7 +55,8 @@ class CalendarPage extends Component {
       });
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
     let paddedCalendarElWidth = paddedCalendarEl.offsetWidth;
-    this.setState({ transformBasePx: paddedCalendarElWidth - 10 });
+
+    this.animationParams.transformBasePx = paddedCalendarElWidth - 10;
     paddedCalendarElWidth -= 20;
     let allCalendarsEl = this.base.querySelector("#allCalendars");
     allCalendarsEl.style.width = paddedCalendarElWidth * 12 + "px";
@@ -76,51 +82,46 @@ class CalendarPage extends Component {
 
   startDrag = (event, el) => {
     if (this.state.selectedDate && this.state.selectedDate.day) {
-      return this.setState({
-        dragging: false,
-        startX: null
-      });
+      this.animationParams.dragging = false;
+      this.animationParams.startX = 0;
+      return;
     }
-    this.setState({
-      dragging: true,
-      startX: event.clientX || event.touches[0].clientX
-    });
+    this.animationParams.dragging = true;
+    this.animationParams.startX = event.clientX || event.touches[0].clientX;
   };
 
   drag = (event, el) => {
-    if (!this.state.dragging) return;
+    if (!this.animationParams.dragging) return;
     if (this.props.selectedDate.day) return;
     let deltaX =
-      (event.clientX || event.touches[0].clientX) - this.state.startX;
-    let { currentTransform } = this.state;
-    noSyncDelta = deltaX;
-    requestAnimationFrame(() => {
-      el.style.transform = `translateX(${Math.round(
-        deltaX + currentTransform
-      )}px)`;
+      (event.clientX || event.touches[0].clientX) - this.animationParams.startX;
+    let { currentTransform } = this.animationParams;
+    this.animationParams.deltaX = deltaX;
+    return requestAnimationFramePromise().then(_ => {
+      el.style.transform = `translateX(${deltaX + currentTransform}px)`;
     });
     event.preventDefault();
     event.stopPropagation();
   };
 
   stopDrag = (event, el) => {
-    if (!this.state.dragging) return;
-    let deltaX = noSyncDelta;
-    this.setState({ dragging: false });
+    if (!this.animationParams.dragging) return;
+    let deltaX = this.animationParams.deltaX;
+    this.animationParams.dragging = false;
     let absDeltaX = Math.abs(deltaX);
     let { month } = this.props.selectedDate;
-    let { transformBasePx, currentTransform } = this.state;
+    let { transformBasePx, currentTransform } = this.animationParams;
     let decrement = deltaX > 0 ? true : false;
     if (
       !absDeltaX ||
-      absDeltaX < transformBasePx / 4 ||
+      absDeltaX < 50 ||
       (decrement && month === 1) ||
       (!decrement && month === 12)
     ) {
       return requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
-          el.style.transition = `transform 0.1s ease-in-out`;
+          el.style.transition = `transform 0.2s linear`;
           el.style.transform = `translateX(${currentTransform}px)`;
           return transitionEndPromise(this.base);
         })
@@ -128,8 +129,6 @@ class CalendarPage extends Component {
           el.style.transition = "";
         });
     }
-    console.log(currentTransform);
-    console.log(transformBasePx);
     let offset = 0;
     if (decrement) {
       offset = currentTransform + transformBasePx;
@@ -139,7 +138,7 @@ class CalendarPage extends Component {
     requestAnimationFramePromise()
       .then(_ => requestAnimationFramePromise())
       .then(_ => {
-        el.style.transition = `transform 0.2s ease-in-out`;
+        el.style.transition = `transform 0.2s linear`;
 
         el.style.transform = `translateX(${offset}px)`;
         return transitionEndPromise(this.base);
@@ -149,7 +148,7 @@ class CalendarPage extends Component {
         return requestAnimationFramePromise();
       })
       .then(_ => {
-        this.setState({ currentTransform: offset });
+        this.animationParams.currentTransform = offset;
         if (decrement) {
           return this.props.decrementMonth();
         }
@@ -173,8 +172,7 @@ class CalendarPage extends Component {
         return requestAnimationFramePromise();
       })
       .then(_ => {
-        console.log(currentTransform);
-        this.setState({ currentTransform: currentTransform });
+        this.animationParams.currentTransform = currentTransform;
       });
   };
 
