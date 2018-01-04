@@ -60,7 +60,7 @@ class CalendarPage extends Component {
     paddedCalendarElWidth -= 20;
     let allCalendarsEl = this.base.querySelector("#allCalendars");
     let innerCarouselEl = this.base.querySelector("#innerCarousel");
-    allCalendarsEl.style.width = paddedCalendarElWidth * 12 + "px";
+    allCalendarsEl.style.width = paddedCalendarElWidth * 3 + "px";
     allCalendarsEl.addEventListener("mousedown", e =>
       this.startDrag(e, innerCarouselEl)
     );
@@ -100,9 +100,7 @@ class CalendarPage extends Component {
       (event.clientX || event.touches[0].clientX) - this.animationParams.startX;
     let { currentTransform } = this.animationParams;
     this.animationParams.deltaX = deltaX;
-    return requestAnimationFramePromise().then(_ => {
-      el.style.transform = `translateX(${deltaX + currentTransform}px)`;
-    });
+    el.style.transform = `translateX(${deltaX + currentTransform}px)`;
     event.preventDefault();
     event.stopPropagation();
   };
@@ -244,6 +242,9 @@ class CalendarPage extends Component {
                   <Calendar
                     key={idx}
                     index={idx}
+                    pre={+k === +selectedDate.month - 1}
+                    current={+k === +selectedDate.month}
+                    post={+k === +selectedDate.month + 1}
                     selectedDate={selectedDate}
                     userDeviceDate={today}
                     monthFillers={monthStartDays[k]}

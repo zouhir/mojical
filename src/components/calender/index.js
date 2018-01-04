@@ -22,11 +22,16 @@ class Calendar extends Component {
     monthFillers,
     incrementMonth,
     decrementMonth,
-    selectDate
+    selectDate,
+    post,
+    pre,
+    current
   }) {
     let classes = cx(
       style.cal,
-      index + 1 === selectedDate.month && style.inView
+      post && style.inview,
+      pre && style.inview,
+      current && style.inview
     );
     return (
       <div className={classes}>
@@ -38,25 +43,6 @@ class Calendar extends Component {
               this.emptyDaysList(monthFillers).map(d => <li />)}
             {calendarPage &&
               Object.keys(calendarPage).map((d, idx) => {
-                let disabled = false;
-                let today = false;
-                if (selectedDate.month > userDeviceDate.month) {
-                  disabled = true;
-                }
-                if (
-                  selectedDate.month === userDeviceDate.month &&
-                  d &&
-                  +d > userDeviceDate.day
-                ) {
-                  disabled = true;
-                }
-                if (
-                  selectedDate.month === userDeviceDate.month &&
-                  d &&
-                  +d === userDeviceDate.day
-                ) {
-                  today = true;
-                }
                 return (
                   <li>
                     <Day
@@ -64,8 +50,6 @@ class Calendar extends Component {
                       feeling={calendarPage[d].feeling || null}
                       userDeviceDate={userDeviceDate}
                       selectedDate={selectedDate}
-                      disabled={disabled}
-                      today={today}
                       selectDate={selectDate}
                     />
                   </li>
