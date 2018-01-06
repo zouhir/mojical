@@ -6,6 +6,7 @@ import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
 import Gallery from "../../components/gallery";
 import PageHeader from "../../components/page-header";
+import IndicatorButton from "../../components/indicator-button";
 
 // util
 import feelingsService from "../../services/feelings";
@@ -54,31 +55,14 @@ class CalendarPage extends Component {
         });
       });
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
-    let paddedCalendarElWidth = paddedCalendarEl.offsetWidth;
-
-    this.animationParams.transformBasePx = paddedCalendarElWidth - 10;
-    paddedCalendarElWidth -= 20;
-    let allCalendarsEl = this.base.querySelector("#allCalendars");
-    let innerCarouselEl = this.base.querySelector("#innerCarousel");
-    allCalendarsEl.style.width = paddedCalendarElWidth * 3 + "px";
-    allCalendarsEl.addEventListener("mousedown", e =>
-      this.startDrag(e, innerCarouselEl)
-    );
-    allCalendarsEl.addEventListener("touchstart", e =>
-      this.startDrag(e, innerCarouselEl)
-    );
-    allCalendarsEl.addEventListener("mousemove", e =>
-      this.drag(e, innerCarouselEl)
-    );
-    allCalendarsEl.addEventListener("touchmove", e =>
-      this.drag(e, innerCarouselEl)
-    );
-    allCalendarsEl.addEventListener("mouseup", e =>
-      this.stopDrag(e, innerCarouselEl)
-    );
-    allCalendarsEl.addEventListener("touchend", e =>
-      this.stopDrag(e, innerCarouselEl)
-    );
+    let allCal = this.base.querySelector(".allCal");
+    this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth - 10;
+    allCal.addEventListener("mousedown", e => this.startDrag(e, allCal));
+    allCal.addEventListener("touchstart", e => this.startDrag(e, allCal));
+    allCal.addEventListener("mousemove", e => this.drag(e, allCal));
+    allCal.addEventListener("touchmove", e => this.drag(e, allCal));
+    allCal.addEventListener("mouseup", e => this.stopDrag(e, allCal));
+    allCal.addEventListener("touchend", e => this.stopDrag(e, allCal));
   }
 
   startDrag = (event, el) => {
@@ -108,7 +92,6 @@ class CalendarPage extends Component {
   stopDrag = (event, el) => {
     if (!this.animationParams.dragging) return;
     let deltaX = this.animationParams.deltaX;
-    this.animationParams.dragging = false;
     let absDeltaX = Math.abs(deltaX);
     let { month } = this.props.selectedDate;
     let { transformBasePx, currentTransform } = this.animationParams;
@@ -154,6 +137,8 @@ class CalendarPage extends Component {
           return this.props.decrementMonth();
         }
         this.props.incrementMonth();
+        this.animationParams.deltaX = 0;
+        this.animationParams.dragging = false;
       });
   };
 
@@ -175,12 +160,6 @@ class CalendarPage extends Component {
       .then(_ => {
         this.animationParams.currentTransform = currentTransform;
       });
-  };
-
-  setCalendarRootEl = (key, base) => {
-    let cal = this.state.calendarsBaseEl.slice(0);
-    cal[key] = base;
-    this.setState({ calendarsBaseEl: cal });
   };
 
   componentWillReceiveProps(newProps) {
@@ -224,6 +203,7 @@ class CalendarPage extends Component {
     { slideUp }
   ) {
     let slidingCalClasses = cx(style.slider, slideUp && style.slide);
+    console.log(Object.keys(calendar));
     return (
       <div className={style.calendar}>
         <PageHeader
@@ -236,26 +216,34 @@ class CalendarPage extends Component {
         <div className={slidingCalClasses}>
           <Gallery />
           <section id="paddedCal" className={style.paddedCalendar}>
-            <div id="allCalendars" className={style.allCalendars}>
-              <div id="innerCarousel" className={style.innerCarousel}>
-                {Object.keys(calendar).map((k, idx) => (
-                  <Calendar
-                    key={idx}
-                    index={idx}
-                    pre={+k === +selectedDate.month - 1}
-                    current={+k === +selectedDate.month}
-                    post={+k === +selectedDate.month + 1}
-                    selectedDate={selectedDate}
-                    userDeviceDate={today}
-                    monthFillers={monthStartDays[k]}
-                    calendarPage={calendar[k]}
-                    incrementMonth={incrementMonth}
-                    decrementMonth={decrementMonth}
-                    selectDate={selectDate}
-                    setCalendarRootEl={this.setCalendarRootEl}
-                  />
-                ))}
-              </div>
+            <div className={`${style.allCalStyle} allCal`}>
+              {Object.keys(calendar).map(monthKey => {
+                if (selectedDate.month - 1 === +monthKey) {
+                  return <Calendar month="prev" prev />;
+                }
+                if (selectedDate.month + 1 === +monthKey) {
+                  return <Calendar month="next" next />;
+                }
+                if (selectedDate.month === +monthKey) {
+                  return (
+                    <Calendar
+                      selectedDate={selectedDate}
+                      userDeviceDate={today}
+                      monthFillers={
+                        selectedDate.month
+                          ? monthStartDays[selectedDate.month]
+                          : null
+                      }
+                      calendarPage={
+                        selectedDate.month ? calendar[selectedDate.month] : null
+                      }
+                      selectDate={selectDate}
+                    />
+                  );
+                } else {
+                  return <Calendar month="prev" prev />;
+                }
+              })}
             </div>
           </section>
         </div>

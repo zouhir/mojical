@@ -3,6 +3,7 @@ import cx from "classnames";
 import style from "./style.scss";
 import Header from "../calender-header";
 import Day from "../calendar-day";
+import IndicatorButton from "../indicator-button";
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -24,39 +25,40 @@ class Calendar extends Component {
     decrementMonth,
     selectDate,
     post,
-    pre,
+    prev,
+    next,
     current
   }) {
-    let classes = cx(
-      style.cal,
-      post && style.inview,
-      pre && style.inview,
-      current && style.inview
-    );
+    let classes = cx(style.cal, prev && style.prev, next && style.next);
     return (
       <div className={classes}>
-        <section>
-          <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
-          <ul className={style.body}>
-            {!calendarPage && <h1>loading</h1>}
-            {monthFillers > 0 &&
-              this.emptyDaysList(monthFillers).map(d => <li />)}
-            {calendarPage &&
-              Object.keys(calendarPage).map((d, idx) => {
-                return (
-                  <li>
-                    <Day
-                      day={+d}
-                      feeling={calendarPage[d].feeling || null}
-                      userDeviceDate={userDeviceDate}
-                      selectedDate={selectedDate}
-                      selectDate={selectDate}
-                    />
-                  </li>
-                );
-              })}
-          </ul>
-        </section>
+        {prev && <IndicatorButton month="prev" prev />}
+        {next && <IndicatorButton month="next" prev />}
+        {!prev &&
+          !next && (
+            <section>
+              <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
+              <ul className={style.body}>
+                {!calendarPage && <h1>loading</h1>}
+                {monthFillers > 0 &&
+                  this.emptyDaysList(monthFillers).map(d => <li />)}
+                {calendarPage &&
+                  Object.keys(calendarPage).map((d, idx) => {
+                    return (
+                      <li>
+                        <Day
+                          day={+d}
+                          feeling={calendarPage[d].feeling || null}
+                          userDeviceDate={userDeviceDate}
+                          selectedDate={selectedDate}
+                          selectDate={selectDate}
+                        />
+                      </li>
+                    );
+                  })}
+              </ul>
+            </section>
+          )}
       </div>
     );
   }

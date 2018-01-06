@@ -25,12 +25,10 @@
     position: relative;
     padding: 10px;
     overflow: hidden;
-    .allCalendars {
-      .innerCarousel {
-        display: flex;
-        flex: row;
-        flex-wrap: nowrap;
-      }
+    .allCalStyle {
+      display: flex;
+      flex: row;
+      flex-wrap: nowrap;
     }
   }
 }

@@ -1,16 +1,21 @@
 @import "../../style/helpers.scss";
 .cal {
-  background: #fff;
+  background: rgba(255, 255, 255, 1);
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
-  flex: 1 0 33.3333%;
-  margin-right: 10px;
-  opacity: 0;
-  &.inview {
-    opacity: 1;
+  transition: background 0.6s;
+  &.prev {
+    background: rgba(255, 255, 255, 0);
+    align-items: flex-end;
   }
+  &.next {
+    background: rgba(255, 255, 255, 0);
+    align-items: flex-start;
+  }
+  flex: 1 0 100%;
+  margin-right: 10px;
+
   ul {
     padding: 0;
     margin: 0;
