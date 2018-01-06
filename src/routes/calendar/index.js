@@ -21,8 +21,7 @@ import { actions } from "../../store";
 )
 class CalendarPage extends Component {
   state = {
-    loading: true,
-    slideUp: false
+    loading: true
   };
   animationParams = {
     startX: 0,
@@ -97,10 +96,7 @@ class CalendarPage extends Component {
       if (event.target.className.indexOf("custom-touch") > -1) {
         return;
       }
-      if (this.state.slideUp) {
-        this.setState({ slideUp: false });
-        return;
-      }
+      this.props.setDate({ day: null });
     }
     let deltaX = this.animationParams.deltaX;
     let absDeltaX = Math.abs(deltaX);
@@ -157,11 +153,6 @@ class CalendarPage extends Component {
   };
 
   componentWillReceiveProps(newProps) {
-    if (newProps.selectedDate.day) {
-      this.setState({ slideUp: true });
-    } else {
-      this.setState({ slideUp: false });
-    }
     if (this.props.selectedDate.month !== newProps.selectedDate.month) {
       this.syncMonthFeelings(
         newProps.selectedDate.year,
@@ -197,24 +188,20 @@ class CalendarPage extends Component {
   };
 
   // Note: `user` comes from the URL, courtesy of our router
-  render(
-    {
-      user,
-      today,
-      selectedDate,
-      setDate,
-      monthStartDays,
-      calendar,
-      incrementMonth,
-      decrementMonth,
-      resetDaySelection,
-      path,
-      toggleNav
-    },
-    { slideUp }
-  ) {
-    console.log(selectedDate.month);
-    let slidingCalClasses = cx(style.slider, slideUp && style.slide);
+  render({
+    user,
+    today,
+    selectedDate,
+    setDate,
+    monthStartDays,
+    calendar,
+    incrementMonth,
+    decrementMonth,
+    resetDaySelection,
+    path,
+    toggleNav
+  }) {
+    let slidingCalClasses = cx(style.slider, selectedDate.day && style.slide);
     return (
       <div className={style.calendar}>
         <PageHeader
@@ -257,7 +244,6 @@ class CalendarPage extends Component {
           postFeeling={this.postFeeling}
           selectedDate={selectedDate}
           resetDaySelection={resetDaySelection}
-          slideUp={slideUp}
         />
       </div>
     );

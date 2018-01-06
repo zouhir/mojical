@@ -1,26 +1,28 @@
-.offscreenCanvas {
-  position: absolute;
+.offcanvasWrapper {
+  position: fixed;
   height: 100%;
   width: 100%;
-  top: 0;
   left: -100%;
+  top: 0;
   z-index: 1000;
-  transition: left 0.3s linear;
-  &.showNav {
+  &.showWrapper {
     left: 0;
-    .offscreenNav {
-      left: 0;
-    }
   }
 }
 .offscreenNav {
+  position: fixed;
   height: 100%;
   background: #232627;
   width: 270px;
-  position: relative;
   left: 0px;
   display: flex;
   flex-direction: column;
+  transform: translateX(-270px);
+  transition: transform 0.2s ease-in-out;
+  z-index: 1001;
+  &.showNav {
+    transform: translateX(0px);
+  }
   .header {
     display: flex;
     flex-direction: column;

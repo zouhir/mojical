@@ -11,13 +11,11 @@ import Menu from "../Icons/Menu";
 const FooterNav = () => <div className={style.footerNav} />;
 
 export default class Footer extends Component {
-  render({ selectedDate, resetDaySelection, slideUp }) {
+  render({ selectedDate, resetDaySelection }) {
     return (
-      <div className={cx(style.footer, slideUp && style.slide)}>
+      <div className={cx(style.footer, selectedDate.day && style.slide)}>
         <div className={style.container}>
-          {selectedDate && selectedDate.day === null && <FooterNav />}
-          {selectedDate &&
-            selectedDate.day !== null && <FeelingsBar {...this.props} />}
+          {!selectedDate.day ? <FooterNav /> : <FeelingsBar {...this.props} />}
         </div>
       </div>
     );

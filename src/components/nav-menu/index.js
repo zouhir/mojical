@@ -4,22 +4,26 @@ import style from "./style.scss";
 
 class NavMenu extends Component {
   componentDidMount() {
-    this.base.addEventListener("click", this.toggleNav);
+    this.base
+      .querySelector(".dismiss")
+      .addEventListener("click", this.props.toggleNav);
   }
   componentWillUnmount() {
-    this.base.removeEventListener("click", this.toggleNav);
+    this.base
+      .querySelector(".dismiss")
+      .removeEventListener("click", this.props.toggleNav);
   }
-  toggleNav = e => {
-    let nav = this.base.getElementsByClassName(style.offscreenNav)[0];
-    if (e.target.className.indexOf(style.offscreenCanvas) > -1) {
-      this.props.toggleNav();
-    }
-  };
   render({ user, path, validAuth, selectedDate, showNav }) {
-    let classes = cx(style.offscreenCanvas, showNav && style.showNav);
+    let classes1 = cx(
+      "dismiss",
+      style.offcanvasWrapper,
+      showNav && style.showWrapper
+    );
+    let classes2 = cx(style.offscreenNav, showNav && style.showNav);
     return (
-      <div className={classes}>
-        <nav className={style.offscreenNav}>
+      <div>
+        <div className={classes1} />
+        <nav className={classes2}>
           <div className={style.header}>
             <div
               className={style.avatar}
