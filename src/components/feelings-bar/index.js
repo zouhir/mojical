@@ -7,7 +7,6 @@ const _FEELINGS = ["happiness", "love", "surprise", "anger", "fear", "sadness"];
 const Feelings = ({ postFeeling, selectedDate, resetDaySelection }) => {
   return (
     <div className={style.feeling}>
-      <button className={style.back} onClick={resetDaySelection} />
       <ul className={style.moji}>
         {_FEELINGS.map(f => (
           <li>

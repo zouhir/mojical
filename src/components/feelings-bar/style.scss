@@ -2,25 +2,12 @@
   position: relative;
   height: 100%;
   width: 100%;
-  .back {
-    position: absolute;
-    height: 100%;
-    width: 40px;
-    left: 0;
-    top: 0;
-    background: transparent;
-    border: none;
-    background: url("../../assets/Close.svg");
-    transform: rotate(180deg);
-    background-size: 12px;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
   .moji {
     height: 100%;
     display: flex;
     align-items: center;
     flex-direction: row;
+    padding: 0;
     li {
       display: flex;
       flex: 1 1 auto;

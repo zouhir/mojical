@@ -80,9 +80,6 @@ class CalendarPage extends Component {
     if (this.props.selectedDate.day) return;
     let deltaX =
       (event.clientX || event.touches[0].clientX) - this.animationParams.startX;
-    if (Math.abs(deltaX) < 5) {
-      return;
-    }
     let { currentTransform } = this.animationParams;
     this.animationParams.deltaX = deltaX;
     el.style.transform = `translateX(${deltaX + currentTransform}px)`;
@@ -92,7 +89,7 @@ class CalendarPage extends Component {
 
   stopDrag = (event, el) => {
     if (!this.animationParams.dragging) return;
-    if (this.animationParams.dragging && this.props.selectedDate.day) {
+    if (this.animationParams.deltaX < 10 && this.props.selectedDate.day) {
       if (event.target.className.indexOf("custom-touch") > -1) {
         return;
       }
@@ -109,8 +106,6 @@ class CalendarPage extends Component {
       (decrement && month === 1) ||
       (!decrement && month === 12)
     ) {
-      this.animationParams.deltaX = 0;
-      this.animationParams.dragging = false;
       return requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
@@ -120,6 +115,8 @@ class CalendarPage extends Component {
         })
         .then(_ => {
           el.style.transition = "";
+          this.animationParams.deltaX = 0;
+          this.animationParams.dragging = false;
         });
     }
 
@@ -202,6 +199,7 @@ class CalendarPage extends Component {
     toggleNav
   }) {
     let slidingCalClasses = cx(style.slider, selectedDate.day && style.slide);
+    console.log(selectedDate);
     return (
       <div className={style.calendar}>
         <PageHeader
