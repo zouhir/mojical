@@ -5,12 +5,6 @@
   align-items: center;
   flex-direction: column;
   transition: background 0.6s;
-  &.prev {
-    align-items: flex-end;
-  }
-  &.next {
-    align-items: flex-start;
-  }
   flex: 1 0 100%;
   margin-right: 10px;
 

@@ -21,14 +21,12 @@ class Calendar extends Component {
     userDeviceDate,
     calendarPage,
     monthFillers,
-    incrementMonth,
-    decrementMonth,
-    setDate,
-    post,
-    prev,
-    next
+    setDate
   }) {
-    let classes = cx(style.cal, prev && style.prev, next && style.next);
+    let classes = cx(
+      style.cal,
+      selectedDate && selectedDate.day && style.shadow
+    );
     return (
       <div className={classes}>
         <section>
