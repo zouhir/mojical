@@ -5,13 +5,14 @@ import style from "./style.scss";
 const Day = ({
   day,
   selectedDate,
-  selectDate,
+  setDate,
   feeling,
   today,
   disabled,
   chooseDay
 }) => {
   let classes = cx(
+    "custom-touch",
     style.day,
     feeling && style.hasFeeling,
     today && style.today,
@@ -25,22 +26,23 @@ const Day = ({
         disabled={disabled}
         className={classes}
         onClick={e => {
-          selectDate({
-            year: selectedDate.year,
-            month: selectedDate.month,
+          if (selectedDate.day === day) {
+            return;
+          }
+          setDate({
             day: day
           });
         }}
       >
         <div
-          className={style.feeling}
+          className={style.feeling + " custom-touch"}
           style={
             feeling
               ? { backgroundImage: `url(../../assets/emojis/${feeling}.svg)` }
               : {}
           }
         />
-        <span>{day}</span>
+        <span className="custom-touch">{day}</span>
       </button>
     );
   return null;

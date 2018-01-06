@@ -27,8 +27,9 @@ let actions = store => ({
       selectedDate: { year, month, day: null }
     };
   },
-  selectDate(state, { year, month, day }) {
-    return { selectedDate: { year, month, day } };
+  setDate(state, obj) {
+    let toSet = Object.assign({}, state.selectedDate, obj);
+    return { selectedDate: toSet };
   },
 
   resetDaySelection(state) {
@@ -52,7 +53,7 @@ let actions = store => ({
         selectedDate: { year, month, day: null }
       };
   },
-  setFeelinginCalendar(state, { month, day, response, lastSync }) {
+  setFeelinginCalendar(state, { month, response }) {
     if (!response) return;
     // TODO: make it pure
     let newCal = Object.assign({}, state.calendar);
@@ -63,8 +64,7 @@ let actions = store => ({
       }
     });
     return {
-      calendar: newCal,
-      lastSync
+      calendar: newCal
     };
   }
 });

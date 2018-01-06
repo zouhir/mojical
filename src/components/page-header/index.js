@@ -18,12 +18,13 @@ const MONTHS = [
 ];
 
 const PageHeader = ({
-  selectDate,
+  setDate,
   toggleNav,
   path,
   validAuth,
   selectedDate,
-  dragToCalendar
+  dragToCalendar,
+  goToCal
 }) => {
   let { month } = selectedDate;
   return (
@@ -32,10 +33,8 @@ const PageHeader = ({
       <select
         name="text"
         onChange={e => {
-          let sd = Object.assign({}, selectedDate);
-          sd.month = e.target.value;
-          selectDate(sd);
-          dragToCalendar(sd.month);
+          setDate({ month: +e.target.value });
+          goToCal(+e.target.value);
         }}
       >
         {MONTHS.map((m, i) => {

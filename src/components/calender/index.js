@@ -23,7 +23,7 @@ class Calendar extends Component {
     monthFillers,
     incrementMonth,
     decrementMonth,
-    selectDate,
+    setDate,
     post,
     prev,
     next
@@ -46,7 +46,7 @@ class Calendar extends Component {
                       feeling={calendarPage[d].feeling || null}
                       userDeviceDate={userDeviceDate}
                       selectedDate={selectedDate}
-                      selectDate={selectDate}
+                      setDate={setDate}
                     />
                   </li>
                 );
