@@ -26,39 +26,33 @@ class Calendar extends Component {
     selectDate,
     post,
     prev,
-    next,
-    current
+    next
   }) {
     let classes = cx(style.cal, prev && style.prev, next && style.next);
     return (
       <div className={classes}>
-        {prev && <IndicatorButton month="prev" prev />}
-        {next && <IndicatorButton month="next" prev />}
-        {!prev &&
-          !next && (
-            <section>
-              <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
-              <ul className={style.body}>
-                {!calendarPage && <h1>loading</h1>}
-                {monthFillers > 0 &&
-                  this.emptyDaysList(monthFillers).map(d => <li />)}
-                {calendarPage &&
-                  Object.keys(calendarPage).map((d, idx) => {
-                    return (
-                      <li>
-                        <Day
-                          day={+d}
-                          feeling={calendarPage[d].feeling || null}
-                          userDeviceDate={userDeviceDate}
-                          selectedDate={selectedDate}
-                          selectDate={selectDate}
-                        />
-                      </li>
-                    );
-                  })}
-              </ul>
-            </section>
-          )}
+        <section>
+          <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
+          <ul className={style.body}>
+            {!calendarPage && <h1>loading</h1>}
+            {monthFillers > 0 &&
+              this.emptyDaysList(monthFillers).map(d => <li />)}
+            {calendarPage &&
+              Object.keys(calendarPage).map((d, idx) => {
+                return (
+                  <li>
+                    <Day
+                      day={+d}
+                      feeling={calendarPage[d].feeling || null}
+                      userDeviceDate={userDeviceDate}
+                      selectedDate={selectedDate}
+                      selectDate={selectDate}
+                    />
+                  </li>
+                );
+              })}
+          </ul>
+        </section>
       </div>
     );
   }

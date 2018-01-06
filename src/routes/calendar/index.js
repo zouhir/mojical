@@ -98,10 +98,12 @@ class CalendarPage extends Component {
     let decrement = deltaX > 0 ? true : false;
     if (
       !absDeltaX ||
-      absDeltaX < 50 ||
+      absDeltaX < 150 ||
       (decrement && month === 1) ||
       (!decrement && month === 12)
     ) {
+      this.animationParams.deltaX = 0;
+      this.animationParams.dragging = false;
       return requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
@@ -149,7 +151,7 @@ class CalendarPage extends Component {
     requestAnimationFramePromise()
       .then(_ => requestAnimationFramePromise())
       .then(_ => {
-        el.style.transition = `transform 0.3s ease-out`;
+        el.style.transition = `transform 0.2s linear`;
         el.style.transform = `translateX(${currentTransform}px)`;
         return transitionEndPromise(this.base);
       })
@@ -218,30 +220,25 @@ class CalendarPage extends Component {
           <section id="paddedCal" className={style.paddedCalendar}>
             <div className={`${style.allCalStyle} allCal`}>
               {Object.keys(calendar).map(monthKey => {
-                if (selectedDate.month - 1 === +monthKey) {
-                  return <Calendar month="prev" prev />;
-                }
-                if (selectedDate.month + 1 === +monthKey) {
-                  return <Calendar month="next" next />;
-                }
-                if (selectedDate.month === +monthKey) {
+                if (
+                  selectedDate.month - 1 === +monthKey ||
+                  selectedDate.month + 1 === +monthKey ||
+                  selectedDate.month === +monthKey
+                ) {
                   return (
                     <Calendar
                       selectedDate={selectedDate}
-                      userDeviceDate={today}
                       monthFillers={
-                        selectedDate.month
-                          ? monthStartDays[selectedDate.month]
-                          : null
+                        selectedDate.month ? monthStartDays[+monthKey] : null
                       }
                       calendarPage={
-                        selectedDate.month ? calendar[selectedDate.month] : null
+                        selectedDate.month ? calendar[+monthKey] : null
                       }
                       selectDate={selectDate}
                     />
                   );
                 } else {
-                  return <Calendar month="prev" prev />;
+                  return <Calendar month="empty" empty />;
                 }
               })}
             </div>
