@@ -76,19 +76,23 @@ class CalendarPage extends Component {
   };
 
   drag = (event, el) => {
+    if (this.animationParams.animatingToStop) return;
     if (!this.animationParams.dragging) return;
     if (this.props.selectedDate.day) return;
+
     let deltaX =
       (event.clientX || event.touches[0].clientX) - this.animationParams.startX;
     let { currentTransform } = this.animationParams;
     this.animationParams.deltaX = deltaX;
-    el.style.transform = `translateX(${deltaX + currentTransform}px)`;
+    el.style.transform = `translateX(${deltaX * 1.2 + currentTransform}px)`;
     event.preventDefault();
     event.stopPropagation();
   };
 
   stopDrag = (event, el) => {
+    if (this.animationParams.animatingToStop) return;
     if (!this.animationParams.dragging) return;
+    this.animationParams.animatingToStop = true;
     if (this.animationParams.deltaX < 10 && this.props.selectedDate.day) {
       if (event.target.className.indexOf("custom-touch") > -1) {
         return;
@@ -100,6 +104,14 @@ class CalendarPage extends Component {
     let { month } = this.props.selectedDate;
     let { transformBasePx, currentTransform } = this.animationParams;
     let decrement = deltaX > 0 ? true : false;
+    if (absDeltaX < 10 && this.props.selectedDate.day) {
+      if (event.target.className.indexOf("custom-touch") < 0) {
+        this.props.setDate({ day: null });
+        this.animationParams.deltaX = 0;
+        this.animationParams.dragging = false;
+        this.animationParams.animatingToStop = false;
+      }
+    }
     if (
       !absDeltaX ||
       absDeltaX < 100 ||
@@ -117,6 +129,7 @@ class CalendarPage extends Component {
           el.style.transition = "";
           this.animationParams.deltaX = 0;
           this.animationParams.dragging = false;
+          this.animationParams.animatingToStop = false;
         });
     }
 
@@ -126,26 +139,24 @@ class CalendarPage extends Component {
     } else {
       offset = currentTransform - transformBasePx;
     }
-    requestAnimationFramePromise()
+    return requestAnimationFramePromise()
       .then(_ => requestAnimationFramePromise())
       .then(_ => {
         el.style.transition = `transform 0.2s ease-out`;
-
         el.style.transform = `translateX(${offset}px)`;
         return transitionEndPromise(this.base);
       })
       .then(_ => {
         el.style.transition = "";
-        return requestAnimationFramePromise();
-      })
-      .then(_ => {
         this.animationParams.currentTransform = offset;
-        if (decrement) {
-          return this.props.decrementMonth();
-        }
-        this.props.incrementMonth();
         this.animationParams.deltaX = 0;
         this.animationParams.dragging = false;
+        this.animationParams.animatingToStop = false;
+        if (decrement) {
+          return this.props.decrementMonth();
+        } else {
+          this.props.incrementMonth();
+        }
       });
   };
 
@@ -159,6 +170,7 @@ class CalendarPage extends Component {
   }
   goToCal = month => {
     let allCal = this.base.querySelector(".allCal");
+    this.animationParams.animatingToStop = false;
     return requestAnimationFramePromise()
       .then(_ => requestAnimationFramePromise())
       .then(_ => {

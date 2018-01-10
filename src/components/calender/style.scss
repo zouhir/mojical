@@ -7,7 +7,6 @@
   transition: background 0.6s;
   flex: 1 0 100%;
   margin-right: 10px;
-
   ul {
     padding: 0;
     margin: 0;
@@ -42,9 +41,9 @@
     width: 100%;
     max-width: 600px;
     align-content: flex-start;
-    min-height: 276px;
+    min-height: 296px;
     @include breakpoint(sm) {
-      min-height: 360px;
+      min-height: 380px;
     }
     li {
       height: 46px;
