@@ -1,10 +1,20 @@
 @import "../../style/helpers.scss";
 .cal {
   display: grid;
-  grid-gap: 10px;
   grid-template-columns: repeat(7, 40px);
   grid-template-rows: repeat(7, 40px);
   justify-content: center;
+  @include xs {
+    grid-gap: 5px;
+  }
+
+  @include sm {
+    grid-gap: 10px;
+  }
+
+  @include md {
+    grid-gap: 15px;
+  }
 }
 
 .heading {

@@ -34,10 +34,10 @@ class CalendarPage extends Component {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
-
     let { setToday } = this.props;
     setToday({ year, month, day });
-    this.syncMonthFeelings(year, month);
+
+    this.registerCalendarEvents();
   }
 
   registerCalendarEvents = () => {
@@ -77,18 +77,15 @@ class CalendarPage extends Component {
   drag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.dragging) return;
-    console.log("dragg");
     this.animationParams.canDragAgain = false;
     let { startX, currentTransform } = this.animationParams;
     let endX = event.clientX || event.touches[0].clientX;
     let deltaX = endX - startX;
     this.animationParams.deltaX = deltaX;
     if (this.props.selectedDate.month === 1 && deltaX > 0) {
-      console.log("cancelled");
       return;
     }
     if (this.props.selectedDate.month === 12 && deltaX < 0) {
-      console.log("cancelled22222222222");
       return;
     }
     el.style.transition = `transform 0ms ease-out`;
@@ -97,6 +94,7 @@ class CalendarPage extends Component {
 
   stopDrag = (event, el) => {
     event.stopPropagation();
+    console.log(event);
     console.log("stop");
     if (!this.animationParams.dragging) return;
     let deltaX = this.animationParams.deltaX;
@@ -154,32 +152,14 @@ class CalendarPage extends Component {
         if (decrement) {
           return this.props.decrementMonth();
         } else {
+          console.log("triggered increment");
           this.props.incrementMonth();
         }
       });
   };
 
-  componentWillReceiveProps(newProps) {
-    if (
-      Object.keys(this.props.calendar).length === 0 &&
-      Object.keys(newProps.calendar).length > 0
-    ) {
-      this.registerCalendarEvents();
-    }
-  }
-  goToCal = month => {
-    let allCal = this.base.querySelector(".allCal");
-    this.animationParams.animatingToStop = false;
-    return requestAnimationFramePromise()
-      .then(_ => requestAnimationFramePromise())
-      .then(_ => {
-        let offset = -(month - 1) * this.animationParams.transformBasePx;
-        allCal.style.transition = `transform 0.2s linear`;
-        allCal.style.transform = `translateX(${offset}px)`;
-        this.animationParams.currentTransform = offset;
-        return transitionEndPromise(allCal);
-      });
-  };
+  componentWillReceiveProps(newProps) {}
+
   postFeeling = feeling => {
     let { uid, authToken } = this.props.user;
     let { year, month, day } = this.props.selectedDate;

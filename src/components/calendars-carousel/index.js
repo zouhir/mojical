@@ -13,7 +13,6 @@ const Carousel = connect(["calendar", "selectedDate"], actions)(
         {Object.keys(calendar).map((mc, idx) => {
           let selectedMonth = +selectedDate.month;
           let monthToRender = +mc;
-          console.log("doing the math");
           if (
             monthToRender === selectedMonth - 1 ||
             monthToRender === selectedMonth ||
