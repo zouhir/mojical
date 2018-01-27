@@ -23,7 +23,4 @@ body {
   background: #232627;
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
 }

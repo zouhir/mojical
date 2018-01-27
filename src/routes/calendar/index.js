@@ -7,7 +7,7 @@ import Footer from "../../components/footer";
 import Gallery from "../../components/gallery";
 import PageHeader from "../../components/page-header";
 import Carousel from "../../components/calendars-carousel";
-import Siema from "siema";
+import TopSection from "../../components/top-section";
 
 // util
 import feelingsService from "../../services/feelings";
@@ -94,8 +94,6 @@ class CalendarPage extends Component {
 
   stopDrag = (event, el) => {
     event.stopPropagation();
-    console.log(event);
-    console.log("stop");
     if (!this.animationParams.dragging) return;
     let deltaX = this.animationParams.deltaX;
     let absDeltaX = Math.abs(deltaX) || 0;
@@ -104,7 +102,6 @@ class CalendarPage extends Component {
     let { transformBasePx, currentTransform } = this.animationParams;
 
     let decrement = deltaX > 0 ? true : false;
-    console.log(absDeltaX);
     if (absDeltaX === 0) {
       this.animationParams.deltaX = 0;
       this.animationParams.dragging = false;
@@ -174,7 +171,7 @@ class CalendarPage extends Component {
         carousel.style.transition = `transform 0.1s ease-out`;
         carousel.style.transform = `translateX(${offset}px)`;
         this.animationParams.currentTransform = offset;
-        return transitionEndPromise(allCal);
+        return transitionEndPromise(carousel);
       });
   };
 
@@ -198,8 +195,7 @@ class CalendarPage extends Component {
     return (
       <div className={style.calendar}>
         <PageHeader />
-        <div className={style.top}>ss</div>
-        {/* <Gallery /> */}
+        <TopSection />
         <section id="paddedCal" className={style.bottom}>
           <Carousel />
         </section>

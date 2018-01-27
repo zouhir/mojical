@@ -2,24 +2,43 @@
 @import "../../style/helpers.scss";
 .calendar {
   width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 70px 1fr 320px;
+  justify-items: center;
+  @include sm {
+    grid-template-rows: 70px 1fr 350px;
+  }
+  @include md {
+    grid-template-rows: 70px 1fr 380px;
+  }
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.top {
 }
 
 .bottom {
   width: 100%;
   max-width: 800px;
-  height: 380px;
   padding: 10px;
   justify-content: center;
   background: #fff;
   background-clip: content-box;
   overflow: hidden;
-}
+  @include xs {
+    grid-gap: 5px;
+  }
 
-.top {
-  flex: 1 1 20px;
+  @include sm {
+    grid-gap: 10px;
+  }
+
+  @include md {
+    grid-gap: 15px;
+  }
 }
