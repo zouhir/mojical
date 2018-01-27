@@ -29,7 +29,6 @@ const PageHeader = connect(["selectedDate"], actions)(
           name="text"
           onChange={e => {
             selectDate({ month: +e.target.value });
-            goToCal(+e.target.value);
           }}
         >
           {MONTHS.map((m, i) => {

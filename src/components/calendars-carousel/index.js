@@ -8,6 +8,7 @@ import { actions } from "../../store";
 
 const Carousel = connect(["calendar", "selectedDate"], actions)(
   ({ selectedDate, calendar, selectDate }) => {
+    console.log("carousel rerender");
     return (
       <div id="carousel" className={style.carousel}>
         {Object.keys(calendar).map((mc, idx) => {

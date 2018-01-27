@@ -158,7 +158,25 @@ class CalendarPage extends Component {
       });
   };
 
-  componentWillReceiveProps(newProps) {}
+  componentWillReceiveProps(newProps) {
+    if (this.props.selectedDate.month !== newProps.selectedDate.month) {
+      this.goToCal(newProps.selectedDate.month);
+    }
+  }
+
+  goToCal = month => {
+    let carousel = this.base.querySelector("#carousel");
+    this.animationParams.animatingToStop = false;
+    return requestAnimationFramePromise()
+      .then(_ => requestAnimationFramePromise())
+      .then(_ => {
+        let offset = -(month - 1) * this.animationParams.transformBasePx;
+        carousel.style.transition = `transform 0.1s ease-out`;
+        carousel.style.transform = `translateX(${offset}px)`;
+        this.animationParams.currentTransform = offset;
+        return transitionEndPromise(allCal);
+      });
+  };
 
   postFeeling = feeling => {
     let { uid, authToken } = this.props.user;
