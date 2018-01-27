@@ -6,8 +6,6 @@ import Calendar from "../../components/calender";
 import Footer from "../../components/footer";
 import Gallery from "../../components/gallery";
 import PageHeader from "../../components/page-header";
-import IndicatorButton from "../../components/indicator-button";
-
 import Carousel from "../../components/calendars-carousel";
 import Siema from "siema";
 
@@ -18,10 +16,7 @@ import feelingsService from "../../services/feelings";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
-@connect(
-  ["user", "today", "lastSync", "selectedDate", "monthStartDays", "calendar"],
-  actions
-)
+@connect(["user", "selectedDate", "calendar"], actions)
 class CalendarPage extends Component {
   state = {
     loading: true
@@ -43,9 +38,12 @@ class CalendarPage extends Component {
     let { setToday } = this.props;
     setToday({ year, month, day });
     this.syncMonthFeelings(year, month);
+  }
+
+  registerCalendarEvents = () => {
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
     let allCal = this.base.querySelector("#carousel");
-    this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth - 10;
+    this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth - 20;
     allCal.addEventListener("mousedown", e => this.startDrag(e, allCal));
     allCal.addEventListener("touchstart", e => this.startDrag(e, allCal));
     allCal.addEventListener("mousemove", e => this.drag(e, allCal));
@@ -53,7 +51,7 @@ class CalendarPage extends Component {
     allCal.addEventListener("mouseup", e => this.stopDrag(e, allCal));
     allCal.addEventListener("touchend", e => this.stopDrag(e, allCal));
     allCal.addEventListener("mouseleave", e => this.stopDrag(e, allCal));
-  }
+  };
 
   syncMonthFeelings = (year, month) => {
     let { uid, authToken } = this.props.user;
@@ -71,6 +69,7 @@ class CalendarPage extends Component {
   startDrag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.canDragAgain) return;
+    console.log("start");
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
   };
@@ -78,16 +77,27 @@ class CalendarPage extends Component {
   drag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.dragging) return;
+    console.log("dragg");
     this.animationParams.canDragAgain = false;
     let { startX, currentTransform } = this.animationParams;
-    let deltaX = (event.clientX || event.touches[0].clientX) - startX;
+    let endX = event.clientX || event.touches[0].clientX;
+    let deltaX = endX - startX;
     this.animationParams.deltaX = deltaX;
+    if (this.props.selectedDate.month === 1 && deltaX > 0) {
+      console.log("cancelled");
+      return;
+    }
+    if (this.props.selectedDate.month === 12 && deltaX < 0) {
+      console.log("cancelled22222222222");
+      return;
+    }
     el.style.transition = `transform 0ms ease-out`;
     el.style.transform = `translateX(${deltaX + currentTransform}px)`;
   };
 
   stopDrag = (event, el) => {
     event.stopPropagation();
+    console.log("stop");
     if (!this.animationParams.dragging) return;
     let deltaX = this.animationParams.deltaX;
     let absDeltaX = Math.abs(deltaX) || 0;
@@ -96,7 +106,13 @@ class CalendarPage extends Component {
     let { transformBasePx, currentTransform } = this.animationParams;
 
     let decrement = deltaX > 0 ? true : false;
-
+    console.log(absDeltaX);
+    if (absDeltaX === 0) {
+      this.animationParams.deltaX = 0;
+      this.animationParams.dragging = false;
+      this.animationParams.canDragAgain = true;
+      return;
+    }
     if (
       absDeltaX < 100 ||
       (decrement && month === 1) ||
@@ -110,6 +126,7 @@ class CalendarPage extends Component {
           return transitionEndPromise(this.base);
         })
         .then(_ => {
+          console.log("stopping shit");
           el.style.transition = "";
           this.animationParams.deltaX = 0;
           this.animationParams.dragging = false;
@@ -135,19 +152,19 @@ class CalendarPage extends Component {
         this.animationParams.dragging = false;
         this.animationParams.canDragAgain = true;
         if (decrement) {
-          //return this.props.decrementMonth();
+          return this.props.decrementMonth();
         } else {
-          //this.props.incrementMonth();
+          this.props.incrementMonth();
         }
       });
   };
 
   componentWillReceiveProps(newProps) {
-    if (this.props.selectedDate.month !== newProps.selectedDate.month) {
-      this.syncMonthFeelings(
-        newProps.selectedDate.year,
-        newProps.selectedDate.month
-      );
+    if (
+      Object.keys(this.props.calendar).length === 0 &&
+      Object.keys(newProps.calendar).length > 0
+    ) {
+      this.registerCalendarEvents();
     }
   }
   goToCal = month => {
@@ -179,111 +196,15 @@ class CalendarPage extends Component {
   };
 
   // Note: `user` comes from the URL, courtesy of our router
-  render({
-    user,
-    today,
-    selectedDate,
-    setDate,
-    monthStartDays,
-    calendar,
-    incrementMonth,
-    decrementMonth,
-    resetDaySelection,
-    toggleNav
-  }) {
+  render({ calendar }) {
     return (
       <div className={style.calendar}>
         <PageHeader />
         <div className={style.top}>ss</div>
         {/* <Gallery /> */}
         <section id="paddedCal" className={style.bottom}>
-          <Carousel>
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={
-                selectedDate.month ? monthStartDays[+selectedDate.month] : null
-              }
-              calendarPage={
-                selectedDate.month ? calendar[+selectedDate.month] : null
-              }
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={
-                selectedDate.month ? monthStartDays[+selectedDate.month] : null
-              }
-              calendarPage={
-                selectedDate.month ? calendar[+selectedDate.month] : null
-              }
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={
-                selectedDate.month ? monthStartDays[+selectedDate.month] : null
-              }
-              calendarPage={
-                selectedDate.month ? calendar[+selectedDate.month] : null
-              }
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={[]}
-              calendarPage={[]}
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={[]}
-              calendarPage={[]}
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={[]}
-              calendarPage={[]}
-              setDate={setDate}
-            />
-            <Calendar
-              selectedDate={selectedDate}
-              monthFillers={[]}
-              calendarPage={[]}
-              setDate={setDate}
-            />
-          </Carousel>
-
-          {/* <div className={`${style.allCalStyle} allCal`}>
-            {Object.keys(calendar).map(monthKey => {
-              if (
-                selectedDate.month - 1 === +monthKey ||
-                selectedDate.month + 1 === +monthKey ||
-                selectedDate.month === +monthKey
-              ) {
-                return (
-                  <Calendar
-                    selectedDate={selectedDate}
-                    monthFillers={
-                      selectedDate.month ? monthStartDays[+monthKey] : null
-                    }
-                    calendarPage={
-                      selectedDate.month ? calendar[+monthKey] : null
-                    }
-                    setDate={setDate}
-                  />
-                );
-              } else {
-                return <Calendar month="empty" empty />;
-              }
-            })}
-          </div> */}
+          <Carousel />
         </section>
-        {/* <Footer
-          postFeeling={this.postFeeling}
-          selectedDate={selectedDate}
-          resetDaySelection={resetDaySelection}
-        /> */}
       </div>
     );
   }

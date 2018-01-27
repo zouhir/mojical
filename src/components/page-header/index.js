@@ -20,7 +20,7 @@ const MONTHS = [
 ];
 
 const PageHeader = connect(["selectedDate"], actions)(
-  ({ setDate, toggleNav, selectedDate, goToCal }) => {
+  ({ selectDate, toggleNav, selectedDate, goToCal }) => {
     let { month } = selectedDate;
     return (
       <header className={style.pageHeader}>
@@ -28,7 +28,7 @@ const PageHeader = connect(["selectedDate"], actions)(
         <select
           name="text"
           onChange={e => {
-            setDate({ month: +e.target.value });
+            selectDate({ month: +e.target.value });
             goToCal(+e.target.value);
           }}
         >

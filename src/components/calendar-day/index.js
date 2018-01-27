@@ -4,19 +4,18 @@ import cx from "classnames";
 import style from "./style.scss";
 
 class Day extends Component {
-  render({ day, selectedDate, setDate, feeling, today, disabled, chooseDay }) {
+  render({ day, month, selectedDate, selectDate, feeling, today }) {
     let classes = cx(
       style.day,
       feeling && style.feeling,
       today && style.today,
-      day === selectedDate.day && style.selected
+      selectedDate.day === day && selectDate.month === month && style.selected
     );
     return (
       <button
-        disabled={disabled}
         className={classes}
         onClick={() => {
-          return setDate({ day });
+          return selectDate({ day });
         }}
         style={
           feeling && {

@@ -9,7 +9,6 @@ let store = createStore({
     month: null,
     day: null
   },
-  monthStartDays: null,
   calendar: {},
   lastSync: {},
   showNav: false
@@ -26,12 +25,11 @@ let actions = store => ({
     let calendar = {};
     return {
       today: { year, month, day },
-      monthStartDays: DateUtils.populateMonthStartDays(year),
-      calendar: DateUtils.populateCalendar(year),
+      calendar: DateUtils.getYearCalendar(year),
       selectedDate: { year, month, day: null }
     };
   },
-  setDate(state, obj) {
+  selectDate(state, obj) {
     let toSet = Object.assign({}, state.selectedDate, obj);
     return { selectedDate: toSet };
   },
@@ -58,18 +56,18 @@ let actions = store => ({
       };
   },
   setFeelinginCalendar(state, { month, response }) {
-    if (!response) return;
-    // TODO: make it pure
-    let newCal = Object.assign({}, state.calendar);
-
-    Object.keys(response).forEach(k => {
-      if (response[k]) {
-        newCal[month][k].feeling = response[k].feeling;
-      }
-    });
-    return {
-      calendar: newCal
-    };
+    // if (!response) return;
+    // // TODO: make it pure
+    // let newCal = Object.assign({}, state.calendar);
+    // Object.keys(response).forEach(k => {
+    //   if (response[k]) {
+    //     newCal[month][k].feeling = response[k].feeling;
+    //   }
+    // });
+    // return {
+    //   calendar: newCal
+    // };
+    return state;
   }
 });
 

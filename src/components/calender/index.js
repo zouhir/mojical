@@ -3,49 +3,50 @@ import cx from "classnames";
 import style from "./style.scss";
 
 import Day from "../calendar-day";
-import IndicatorButton from "../indicator-button";
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+import { connect } from "unistore/preact";
+import { actions } from "../../store";
+
 class Calendar extends Component {
-  emptyDaysList = ln => {
-    let nullDays = [];
-    for (let i = 0; i < ln; i++) {
-      nullDays.push(null);
-    }
-    return nullDays;
-  };
-  render({
-    index,
-    selectedDate,
-    userDeviceDate,
-    calendarPage,
-    monthFillers,
-    setDate
-  }) {
-    let classes = cx(
-      style.cal,
-      selectedDate && selectedDate.day && style.shadow
-    );
-    console.log(calendarPage);
+  render({ today, selectedDate, selectDate, currentMonthCalendar }) {
     return (
-      <div className={classes}>
+      <div className={style.cal}>
         {DAYS.map(d => <div className={style.heading}>{d}</div>)}
-        {monthFillers > 0 && this.emptyDaysList(monthFillers).map(d => <div />)}
-        {calendarPage &&
-          Object.keys(calendarPage).map((d, idx) => {
+        {Object.keys(currentMonthCalendar).map((d, idx) => {
+          let dayObj = currentMonthCalendar[d];
+          if (idx === 0 && dayObj.day > 0) {
+            let startDay = dayObj.day;
+            let daysArr = [];
+            for (let i = 0; i <= startDay; i++) {
+              i === startDay
+                ? daysArr.push(
+                    <div className={style.cell}>
+                      <Day
+                        day={+d}
+                        feeling={dayObj.feeling}
+                        selectedDate={selectedDate}
+                        selectDate={selectDate}
+                      />
+                    </div>
+                  )
+                : daysArr.push(<div />);
+            }
+            return daysArr;
+          } else {
             return (
               <div className={style.cell}>
                 <Day
                   day={+d}
-                  feeling={calendarPage[d].feeling || null}
-                  userDeviceDate={userDeviceDate}
+                  feeling={currentMonthCalendar[d].feeling || null}
                   selectedDate={selectedDate}
-                  setDate={setDate}
+                  selectDate={selectDate}
                 />
               </div>
             );
-          })}
+          }
+        })}
       </div>
     );
   }
