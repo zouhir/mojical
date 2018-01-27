@@ -8,6 +8,9 @@ import Gallery from "../../components/gallery";
 import PageHeader from "../../components/page-header";
 import IndicatorButton from "../../components/indicator-button";
 
+import Carousel from "../../components/calendars-carousel";
+import Siema from "siema";
+
 // util
 import feelingsService from "../../services/feelings";
 
@@ -29,7 +32,7 @@ class CalendarPage extends Component {
     deltaX: 0,
     transformBasePx: 0,
     currentTransform: 0,
-    startTime: 0
+    canDragAgain: true
   };
   componentDidMount() {
     let date = new Date();
@@ -41,7 +44,7 @@ class CalendarPage extends Component {
     setToday({ year, month, day });
     this.syncMonthFeelings(year, month);
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
-    let allCal = this.base.querySelector(".allCal");
+    let allCal = this.base.querySelector("#carousel");
     this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth - 10;
     allCal.addEventListener("mousedown", e => this.startDrag(e, allCal));
     allCal.addEventListener("touchstart", e => this.startDrag(e, allCal));
@@ -49,6 +52,7 @@ class CalendarPage extends Component {
     allCal.addEventListener("touchmove", e => this.drag(e, allCal));
     allCal.addEventListener("mouseup", e => this.stopDrag(e, allCal));
     allCal.addEventListener("touchend", e => this.stopDrag(e, allCal));
+    allCal.addEventListener("mouseleave", e => this.stopDrag(e, allCal));
   }
 
   syncMonthFeelings = (year, month) => {
@@ -65,55 +69,35 @@ class CalendarPage extends Component {
   };
 
   startDrag = (event, el) => {
-    if (this.state.selectedDate && this.state.selectedDate.day) {
-      this.animationParams.dragging = false;
-      this.animationParams.startX = 0;
-      return;
-    }
-    this.animationParams.startTime = new Date().getTime();
+    event.stopPropagation();
+    if (!this.animationParams.canDragAgain) return;
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
   };
 
   drag = (event, el) => {
-    if (this.animationParams.animatingToStop) return;
-    if (!this.animationParams.dragging) return;
-    if (this.props.selectedDate.day) return;
-
-    let deltaX =
-      (event.clientX || event.touches[0].clientX) - this.animationParams.startX;
-    let { currentTransform } = this.animationParams;
-    this.animationParams.deltaX = deltaX;
-    el.style.transform = `translateX(${deltaX * 1.2 + currentTransform}px)`;
-    event.preventDefault();
     event.stopPropagation();
+    if (!this.animationParams.dragging) return;
+    this.animationParams.canDragAgain = false;
+    let { startX, currentTransform } = this.animationParams;
+    let deltaX = (event.clientX || event.touches[0].clientX) - startX;
+    this.animationParams.deltaX = deltaX;
+    el.style.transition = `transform 0ms ease-out`;
+    el.style.transform = `translateX(${deltaX + currentTransform}px)`;
   };
 
   stopDrag = (event, el) => {
-    if (this.animationParams.animatingToStop) return;
+    event.stopPropagation();
     if (!this.animationParams.dragging) return;
-    this.animationParams.animatingToStop = true;
-    if (this.animationParams.deltaX < 10 && this.props.selectedDate.day) {
-      if (event.target.className.indexOf("custom-touch") > -1) {
-        return;
-      }
-      this.props.setDate({ day: null });
-    }
     let deltaX = this.animationParams.deltaX;
-    let absDeltaX = Math.abs(deltaX);
+    let absDeltaX = Math.abs(deltaX) || 0;
+
     let { month } = this.props.selectedDate;
     let { transformBasePx, currentTransform } = this.animationParams;
+
     let decrement = deltaX > 0 ? true : false;
-    if (absDeltaX < 10 && this.props.selectedDate.day) {
-      if (event.target.className.indexOf("custom-touch") < 0) {
-        this.props.setDate({ day: null });
-        this.animationParams.deltaX = 0;
-        this.animationParams.dragging = false;
-        this.animationParams.animatingToStop = false;
-      }
-    }
+
     if (
-      !absDeltaX ||
       absDeltaX < 100 ||
       (decrement && month === 1) ||
       (!decrement && month === 12)
@@ -121,7 +105,7 @@ class CalendarPage extends Component {
       return requestAnimationFramePromise()
         .then(_ => requestAnimationFramePromise())
         .then(_ => {
-          el.style.transition = `transform 0.2s ease-in`;
+          el.style.transition = `transform 0.2s ease-out`;
           el.style.transform = `translateX(${currentTransform}px)`;
           return transitionEndPromise(this.base);
         })
@@ -129,18 +113,16 @@ class CalendarPage extends Component {
           el.style.transition = "";
           this.animationParams.deltaX = 0;
           this.animationParams.dragging = false;
-          this.animationParams.animatingToStop = false;
+          this.animationParams.canDragAgain = true;
         });
     }
-
-    let offset = 0;
+    let offset;
     if (decrement) {
       offset = currentTransform + transformBasePx;
     } else {
       offset = currentTransform - transformBasePx;
     }
     return requestAnimationFramePromise()
-      .then(_ => requestAnimationFramePromise())
       .then(_ => {
         el.style.transition = `transform 0.2s ease-out`;
         el.style.transform = `translateX(${offset}px)`;
@@ -151,11 +133,11 @@ class CalendarPage extends Component {
         this.animationParams.currentTransform = offset;
         this.animationParams.deltaX = 0;
         this.animationParams.dragging = false;
-        this.animationParams.animatingToStop = false;
+        this.animationParams.canDragAgain = true;
         if (decrement) {
-          return this.props.decrementMonth();
+          //return this.props.decrementMonth();
         } else {
-          this.props.incrementMonth();
+          //this.props.incrementMonth();
         }
       });
   };
@@ -207,54 +189,101 @@ class CalendarPage extends Component {
     incrementMonth,
     decrementMonth,
     resetDaySelection,
-    path,
     toggleNav
   }) {
-    let slidingCalClasses = cx(style.slider, selectedDate.day && style.slide);
-    console.log(selectedDate);
     return (
       <div className={style.calendar}>
-        <PageHeader
-          toggleNav={toggleNav}
-          selectedDate={selectedDate}
-          path={path}
-          setDate={setDate}
-          goToCal={this.goToCal}
-        />
-        <div className={slidingCalClasses}>
-          <Gallery />
-          <section id="paddedCal" className={style.paddedCalendar}>
-            <div className={`${style.allCalStyle} allCal`}>
-              {Object.keys(calendar).map(monthKey => {
-                if (
-                  selectedDate.month - 1 === +monthKey ||
-                  selectedDate.month + 1 === +monthKey ||
-                  selectedDate.month === +monthKey
-                ) {
-                  return (
-                    <Calendar
-                      selectedDate={selectedDate}
-                      monthFillers={
-                        selectedDate.month ? monthStartDays[+monthKey] : null
-                      }
-                      calendarPage={
-                        selectedDate.month ? calendar[+monthKey] : null
-                      }
-                      setDate={setDate}
-                    />
-                  );
-                } else {
-                  return <Calendar month="empty" empty />;
-                }
-              })}
-            </div>
-          </section>
-        </div>
-        <Footer
+        <PageHeader />
+        <div className={style.top}>ss</div>
+        {/* <Gallery /> */}
+        <section id="paddedCal" className={style.bottom}>
+          <Carousel>
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={
+                selectedDate.month ? monthStartDays[+selectedDate.month] : null
+              }
+              calendarPage={
+                selectedDate.month ? calendar[+selectedDate.month] : null
+              }
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={
+                selectedDate.month ? monthStartDays[+selectedDate.month] : null
+              }
+              calendarPage={
+                selectedDate.month ? calendar[+selectedDate.month] : null
+              }
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={
+                selectedDate.month ? monthStartDays[+selectedDate.month] : null
+              }
+              calendarPage={
+                selectedDate.month ? calendar[+selectedDate.month] : null
+              }
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={[]}
+              calendarPage={[]}
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={[]}
+              calendarPage={[]}
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={[]}
+              calendarPage={[]}
+              setDate={setDate}
+            />
+            <Calendar
+              selectedDate={selectedDate}
+              monthFillers={[]}
+              calendarPage={[]}
+              setDate={setDate}
+            />
+          </Carousel>
+
+          {/* <div className={`${style.allCalStyle} allCal`}>
+            {Object.keys(calendar).map(monthKey => {
+              if (
+                selectedDate.month - 1 === +monthKey ||
+                selectedDate.month + 1 === +monthKey ||
+                selectedDate.month === +monthKey
+              ) {
+                return (
+                  <Calendar
+                    selectedDate={selectedDate}
+                    monthFillers={
+                      selectedDate.month ? monthStartDays[+monthKey] : null
+                    }
+                    calendarPage={
+                      selectedDate.month ? calendar[+monthKey] : null
+                    }
+                    setDate={setDate}
+                  />
+                );
+              } else {
+                return <Calendar month="empty" empty />;
+              }
+            })}
+          </div> */}
+        </section>
+        {/* <Footer
           postFeeling={this.postFeeling}
           selectedDate={selectedDate}
           resetDaySelection={resetDaySelection}
-        />
+        /> */}
       </div>
     );
   }

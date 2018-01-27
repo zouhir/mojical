@@ -11,12 +11,16 @@ let store = createStore({
   },
   monthStartDays: null,
   calendar: {},
-  lastSync: {}
+  lastSync: {},
+  showNav: false
 });
 
 let actions = store => ({
   setUser(state, user) {
     return { user: user };
+  },
+  toggleNav(state) {
+    return { showNav: !state.showNav };
   },
   setToday(state, { year, month, day }) {
     let calendar = {};

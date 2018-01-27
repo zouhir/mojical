@@ -1,6 +1,7 @@
+@import "../../style/helpers.scss";
 .footer {
   width: 100%;
-  background: #474b4e;
+  background: rgba(35, 38, 39, 0.9);
   box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.1);
   bottom: -90px;
   width: 100%;
@@ -8,24 +9,19 @@
   display: flex;
   position: absolute;
   transition: bottom 0.2s linear;
+  padding: 15px;
   &.slide {
     bottom: 0;
-  }
-  &:before {
-    content: "";
-    height: 10px;
-    top: -10px;
-    width: 100%;
-    position: absolute;
-    background: #474b4e;
   }
   .container {
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
-    height: 80px;
     display: flex;
     align-items: center;
+    background: #232627;
+    border-radius: 10px;
+    padding: 10px;
   }
 }
 

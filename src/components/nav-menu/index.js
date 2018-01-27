@@ -2,6 +2,10 @@ import { h, Component } from "preact";
 import cx from "classnames";
 import style from "./style.scss";
 
+import { connect } from "unistore/preact";
+import { actions } from "../../store";
+
+@connect(["user", "showNav"], actions)
 class NavMenu extends Component {
   componentDidMount() {
     this.base
@@ -13,7 +17,7 @@ class NavMenu extends Component {
       .querySelector(".dismiss")
       .removeEventListener("click", this.props.toggleNav);
   }
-  render({ user, path, validAuth, selectedDate, showNav }) {
+  render({ user, showNav }) {
     let classes1 = cx(
       "dismiss",
       style.offcanvasWrapper,

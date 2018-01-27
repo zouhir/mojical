@@ -16,11 +16,7 @@ import { actions } from "../store";
 @connect(["user", "selectedDate"], actions)
 class App extends Component {
   state = {
-    validAuth: false,
-    showNav: false
-  };
-  toggleNav = () => {
-    this.setState({ showNav: !this.state.showNav });
+    validAuth: false
   };
   componentDidMount() {
     Auth.authInstance().onAuthStateChanged(user => {
@@ -52,12 +48,10 @@ class App extends Component {
     this.currentUrl = e.url;
   };
 
-  render({ selectedDate, user }, { validAuth, showNav }) {
+  render({ selectedDate, user }) {
     return (
       <div id="app">
-        {user && (
-          <NavMenu user={user} toggleNav={this.toggleNav} showNav={showNav} />
-        )}
+        {user && <NavMenu />}
         <Router onChange={this.handleRoute}>
           {!user ? (
             <Home path="/" signIn={Auth.signIn} />

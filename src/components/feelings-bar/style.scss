@@ -8,11 +8,13 @@
     align-items: center;
     flex-direction: row;
     padding: 0;
+    flex-wrap: wrap;
     li {
       display: flex;
-      flex: 1 1 auto;
+      flex: 0 0 20%;
       align-items: center;
       justify-content: center;
+      margin-bottom: 10px;
       button {
         position: relative;
         border: none;

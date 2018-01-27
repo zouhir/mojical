@@ -1,0 +1,6 @@
+.carousel {
+  display: grid;
+  grid-template-columns: repeat(12, 100%);
+  transform: translateX(0);
+  will-change: transform;
+}

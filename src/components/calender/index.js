@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import cx from "classnames";
 import style from "./style.scss";
-import Header from "../calender-header";
+
 import Day from "../calendar-day";
 import IndicatorButton from "../indicator-button";
 
@@ -27,30 +27,25 @@ class Calendar extends Component {
       style.cal,
       selectedDate && selectedDate.day && style.shadow
     );
+    console.log(calendarPage);
     return (
       <div className={classes}>
-        <section>
-          <ul className={style.headers}>{DAYS.map(d => <li>{d}</li>)}</ul>
-          <ul className={style.body}>
-            {!calendarPage && <h1>loading</h1>}
-            {monthFillers > 0 &&
-              this.emptyDaysList(monthFillers).map(d => <li />)}
-            {calendarPage &&
-              Object.keys(calendarPage).map((d, idx) => {
-                return (
-                  <li>
-                    <Day
-                      day={+d}
-                      feeling={calendarPage[d].feeling || null}
-                      userDeviceDate={userDeviceDate}
-                      selectedDate={selectedDate}
-                      setDate={setDate}
-                    />
-                  </li>
-                );
-              })}
-          </ul>
-        </section>
+        {DAYS.map(d => <div className={style.heading}>{d}</div>)}
+        {monthFillers > 0 && this.emptyDaysList(monthFillers).map(d => <div />)}
+        {calendarPage &&
+          Object.keys(calendarPage).map((d, idx) => {
+            return (
+              <div className={style.cell}>
+                <Day
+                  day={+d}
+                  feeling={calendarPage[d].feeling || null}
+                  userDeviceDate={userDeviceDate}
+                  selectedDate={selectedDate}
+                  setDate={setDate}
+                />
+              </div>
+            );
+          })}
       </div>
     );
   }

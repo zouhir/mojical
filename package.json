@@ -25,7 +25,8 @@
     "jest": "^22.0.4",
     "node-sass": "^4.7.2",
     "preact-cli": "^2.0.0",
-    "sass-loader": "^6.0.6"
+    "sass-loader": "^6.0.6",
+    "webpack-jarvis": "^0.1.1"
   },
   "dependencies": {
     "date-fns": "^1.29.0",
