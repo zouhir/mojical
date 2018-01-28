@@ -2,6 +2,11 @@ import fetch from "unfetch";
 import config from "../config";
 
 class feelingsService {
+  static constructUrl(uid, token, year, month) {
+    return `${
+      config.databaseURL
+    }/user-feelings/${uid}/${year}/${month}.json?auth=${token}`;
+  }
   static post({ uid, year, month, day, feeling }, online, token) {
     let payload = JSON.stringify({
       [day]: { feeling: feeling }

@@ -1,0 +1,16 @@
+.panel {
+  display: grid;
+  grid-template-columns: repeat(5, 40px);
+  grid-template-rows: repeat(5, 40px);
+  justify-content: center;
+  grid-gap: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  button {
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    background-size: 35px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}

@@ -1,5 +1,8 @@
 import createStore from "unistore";
 import DateUtils from "../util/date";
+import fs from "../services/feelings";
+
+const feelingsAPIWorker = new Worker("../workers/feelings-api.js");
 
 let store = createStore({
   user: null,
@@ -21,7 +24,11 @@ let actions = store => ({
   toggleNav(state) {
     return { showNav: !state.showNav };
   },
-  setToday(state, { year, month, day }) {
+  setToday(state) {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
     let calendar = {};
     return {
       today: { year, month, day },
@@ -43,6 +50,7 @@ let actions = store => ({
   decrementMonth(state) {
     let { year, month } = state.selectedDate;
     month = month - 1;
+    this.dispatchFeelingsWorker({ year, month });
     return {
       selectedDate: { year, month, day: null }
     };
@@ -50,24 +58,22 @@ let actions = store => ({
   incrementMonth(state) {
     let { year, month } = state.selectedDate;
     month = month + 1;
+    this.dispatchFeelingsWorker({ year, month });
     if (month <= 12)
       return {
         selectedDate: { year, month, day: null }
       };
   },
-  setFeelinginCalendar(state, { month, response }) {
-    // if (!response) return;
-    // // TODO: make it pure
-    // let newCal = Object.assign({}, state.calendar);
-    // Object.keys(response).forEach(k => {
-    //   if (response[k]) {
-    //     newCal[month][k].feeling = response[k].feeling;
-    //   }
-    // });
-    // return {
-    //   calendar: newCal
-    // };
-    return state;
+  dispatchFeelingsWorker(state, { year, month }) {
+    let { uid, authToken } = state.user;
+    let url = fs.constructUrl(uid, authToken, year, month);
+    feelingsAPIWorker.postMessage([url, month, state["calendar"][month]]);
+    feelingsAPIWorker.onmessage = e => {
+      let calendar = Object.assign({}, state.calendar);
+      let key = Object.keys(e.data)[0];
+      calendar[key] = e.data[key];
+      return store.setState({ calendar: calendar });
+    };
   }
 });
 

@@ -35,7 +35,6 @@ export default class Auth {
   }
 
   static signOut() {
-    console.log("signout");
     return "signout";
   }
 }

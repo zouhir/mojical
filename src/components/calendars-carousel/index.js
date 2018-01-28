@@ -6,9 +6,9 @@ import Calendar from "../calender";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
-const Carousel = connect(["calendar", "selectedDate"], actions)(
-  ({ selectedDate, calendar, selectDate }) => {
-    console.log("carousel rerender");
+@connect(["calendar", "selectedDate"], actions)
+class Carousel extends Component {
+  render({ selectedDate, calendar, selectDate }) {
     return (
       <div id="carousel" className={style.carousel}>
         {Object.keys(calendar).map((mc, idx) => {
@@ -40,6 +40,6 @@ const Carousel = connect(["calendar", "selectedDate"], actions)(
       </div>
     );
   }
-);
+}
 
 export default Carousel;

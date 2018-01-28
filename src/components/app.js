@@ -13,12 +13,12 @@ import Auth from "../util/auth";
 import { connect } from "unistore/preact";
 import { actions } from "../store";
 
-@connect(["user", "selectedDate"], actions)
+@connect(["user", "today"], actions)
 class App extends Component {
-  state = {
-    validAuth: false
-  };
   componentDidMount() {
+    if (this.props.user && this.props.today) {
+      this.dispatchFeelingApi(this.props.today);
+    }
     Auth.authInstance().onAuthStateChanged(user => {
       if (user) {
         let u = {};
@@ -32,23 +32,33 @@ class App extends Component {
         Auth.getToken()
           .then(token => {
             u.authToken = token;
+            this.props.setToday();
             this.props.setUser(u);
-            this.setState({ validAuth: true });
           })
           .catch(error => {
             console.error(error);
           });
       } else {
-        this.setState({ validAuth: false });
       }
     });
   }
+
+  dispatchFeelingApi = today => {
+    let { year, month } = today;
+    this.props.dispatchFeelingsWorker({ year, month });
+  };
 
   handleRoute = e => {
     this.currentUrl = e.url;
   };
 
-  render({ selectedDate, user }) {
+  componentWillReceiveProps(newProps) {
+    if (newProps.user && newProps.today) {
+      this.dispatchFeelingApi(newProps.today);
+    }
+  }
+
+  render({ today, user }) {
     return (
       <div id="app">
         {user && <NavMenu />}

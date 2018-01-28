@@ -30,27 +30,28 @@ class CalendarPage extends Component {
     canDragAgain: true
   };
   componentDidMount() {
-    let date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let { setToday } = this.props;
-    setToday({ year, month, day });
-
     this.registerCalendarEvents();
   }
 
   registerCalendarEvents = () => {
     let paddedCalendarEl = this.base.querySelector("#paddedCal");
     let allCal = this.base.querySelector("#carousel");
-    this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth - 20;
-    allCal.addEventListener("mousedown", e => this.startDrag(e, allCal));
-    allCal.addEventListener("touchstart", e => this.startDrag(e, allCal));
-    allCal.addEventListener("mousemove", e => this.drag(e, allCal));
-    allCal.addEventListener("touchmove", e => this.drag(e, allCal));
-    allCal.addEventListener("mouseup", e => this.stopDrag(e, allCal));
-    allCal.addEventListener("touchend", e => this.stopDrag(e, allCal));
-    allCal.addEventListener("mouseleave", e => this.stopDrag(e, allCal));
+    this.animationParams.transformBasePx = paddedCalendarEl.offsetWidth;
+    paddedCalendarEl.addEventListener("mousedown", e =>
+      this.startDrag(e, allCal)
+    );
+    paddedCalendarEl.addEventListener("touchstart", e =>
+      this.startDrag(e, allCal)
+    );
+    paddedCalendarEl.addEventListener("mousemove", e => this.drag(e, allCal));
+    paddedCalendarEl.addEventListener("touchmove", e => this.drag(e, allCal));
+    paddedCalendarEl.addEventListener("mouseup", e => this.stopDrag(e, allCal));
+    paddedCalendarEl.addEventListener("touchend", e =>
+      this.stopDrag(e, allCal)
+    );
+    paddedCalendarEl.addEventListener("mouseleave", e =>
+      this.stopDrag(e, allCal)
+    );
   };
 
   syncMonthFeelings = (year, month) => {
@@ -69,7 +70,6 @@ class CalendarPage extends Component {
   startDrag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.canDragAgain) return;
-    console.log("start");
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
   };
@@ -121,7 +121,6 @@ class CalendarPage extends Component {
           return transitionEndPromise(this.base);
         })
         .then(_ => {
-          console.log("stopping shit");
           el.style.transition = "";
           this.animationParams.deltaX = 0;
           this.animationParams.dragging = false;
@@ -149,7 +148,6 @@ class CalendarPage extends Component {
         if (decrement) {
           return this.props.decrementMonth();
         } else {
-          console.log("triggered increment");
           this.props.incrementMonth();
         }
       });
@@ -195,9 +193,14 @@ class CalendarPage extends Component {
     return (
       <div className={style.calendar}>
         <PageHeader />
-        <TopSection />
-        <section id="paddedCal" className={style.bottom}>
-          <Carousel />
+        <div className={style.top}>
+          <TopSection />
+        </div>
+
+        <section className={style.bottom}>
+          <div id="paddedCal" className={style.calendarWindow}>
+            <Carousel />
+          </div>
         </section>
       </div>
     );
