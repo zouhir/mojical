@@ -2,7 +2,9 @@ import createStore from "unistore";
 import DateUtils from "../util/date";
 import fs from "../services/feelings";
 
-const feelingsAPIWorker = new Worker("../workers/feelings-api.js");
+import FeelingsWorker from "worker-loader!../workers/feelings-api.worker.js";
+
+const feelingsAPIWorker = new FeelingsWorker();
 
 let store = createStore({
   user: null,

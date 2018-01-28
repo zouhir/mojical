@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build",
+    "build": "preact build --no-prerender",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
     "lint": "eslint src",
@@ -26,7 +26,8 @@
     "node-sass": "^4.7.2",
     "preact-cli": "^2.0.0",
     "sass-loader": "^6.0.6",
-    "webpack-jarvis": "^0.1.1"
+    "webpack-jarvis": "^0.1.1",
+    "worker-loader": "^1.1.0"
   },
   "dependencies": {
     "date-fns": "^1.29.0",

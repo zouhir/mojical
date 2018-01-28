@@ -1,12 +1,12 @@
 .pageHeader {
   width: 100%;
-  flex: 0 0 70px;
   background: #fff;
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.01);
   display: flex;
   flex-direction: row;
   align-items: center;
   grid-area: header;
+  height: 70px;
   .menu {
     width: 120px;
     background-image: url("../../assets/menu.svg");

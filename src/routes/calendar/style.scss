@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: 100%;
   grid-template-areas: "header" "top" "bottom";
-  grid-template-rows: 70px 1fr 330px;
+  grid-template-rows: auto 1fr 330px;
   position: absolute;
   top: 0;
   left: 0;
@@ -29,15 +29,13 @@
 
 .bottom {
   grid-area: bottom;
-  padding: 10px;
+  padding: 10px 0px 10px 10px;
   @include lg {
-    padding: 10px 10px 10px 0px;
     display: grid;
     justify-items: start;
   }
   .calendarWindow {
     overflow: hidden;
-    background: #fff;
     width: 100%;
     max-width: 600px;
     height: 100%;
