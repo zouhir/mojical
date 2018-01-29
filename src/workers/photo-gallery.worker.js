@@ -8,21 +8,17 @@ onmessage = function(e) {
   })
     .then(r => r.json())
     .then(res => {
-      let currentMonth = e.data[2];
-      if (!res || Object.keys(res).length < 1) {
-        postMessage({ [e.data[1]]: currentMonth });
-        return;
+      console.log(res);
+      if (res) {
+        let random = Math.floor(Math.random() * (res.length - 1)) + 0;
+        let pic = res[random];
+        postMessage({
+          src: pic.urls.regular || pic.urls.full,
+          artist: pic.user.name,
+          url: pic.links.self,
+          color: pic.color
+        });
       }
-      Object.keys(res).forEach(day => {
-        let dayData = res[day];
-        currentMonth[day].feeling =
-          dayData.feeling || currentMonth[day].feeling;
-        currentMonth[day].note = dayData.note || currentMonth[day].note;
-        currentMonth[day].location =
-          dayData.location || currentMonth[day].location;
-      });
-      postMessage({
-        [e.data[1]]: currentMonth
-      });
-    });
+    })
+    .catch(e => console.log(e));
 };

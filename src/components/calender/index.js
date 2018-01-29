@@ -6,9 +6,6 @@ import Day from "../calendar-day";
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-import { connect } from "unistore/preact";
-import { actions } from "../../store";
-
 class Calendar extends Component {
   render({ today, selectedDate, selectDate, currentMonthCalendar }) {
     return (

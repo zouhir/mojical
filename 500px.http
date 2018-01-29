@@ -1,1 +1,1 @@
-GET https://api.unsplash.com/collections/142324/photos/?client_id=c1e1bea92d48032ec586e95b1629212cd8ef6265e3cb22015fd7018b6b4ff141
+GET https://api.unsplash.com/collections/142324/photos?client_id=c1e1bea92d48032ec586e95b1629212cd8ef6265e3cb22015fd7018b6b4ff141

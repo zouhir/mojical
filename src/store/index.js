@@ -1,10 +1,13 @@
 import createStore from "unistore";
 import DateUtils from "../util/date";
 import fs from "../services/feelings";
+import ps from "../services/photos";
 
 import FeelingsWorker from "worker-loader!../workers/feelings-api.worker.js";
+import PhotoGallery from "worker-loader!../workers/photo-gallery.worker.js";
 
 const feelingsAPIWorker = new FeelingsWorker();
+const photoGalleryWorker = new PhotoGallery();
 
 let store = createStore({
   user: null,
@@ -16,7 +19,13 @@ let store = createStore({
   },
   calendar: {},
   lastSync: {},
-  showNav: false
+  showNav: false,
+  gallery: {
+    src: null,
+    artist: null,
+    url: null,
+    color: null
+  }
 });
 
 let actions = store => ({
@@ -66,15 +75,54 @@ let actions = store => ({
         selectedDate: { year, month, day: null }
       };
   },
-  dispatchFeelingsWorker(state, { year, month }) {
+  postFeeling(state, { feeling }) {
     let { uid, authToken } = state.user;
+    let { year, day, month } = state.selectedDate;
     let url = fs.constructUrl(uid, authToken, year, month);
-    feelingsAPIWorker.postMessage([url, month, state["calendar"][month]]);
+    let data = {
+      [day]: { feeling: feeling }
+    };
+    feelingsAPIWorker.postMessage([
+      url,
+      {
+        month: month,
+        data: data,
+        calendar: state["calendar"][month]
+      },
+      "POST"
+    ]);
     feelingsAPIWorker.onmessage = e => {
       let calendar = Object.assign({}, state.calendar);
       let key = Object.keys(e.data)[0];
       calendar[key] = e.data[key];
       return store.setState({ calendar: calendar });
+    };
+  },
+
+  dispatchFeelingsWorker(state, { year, month }) {
+    let { uid, authToken } = state.user;
+    let url = fs.constructUrl(uid, authToken, year, month);
+    feelingsAPIWorker.postMessage([
+      url,
+      {
+        month: month,
+        calendar: state["calendar"][month]
+      },
+      "GET"
+    ]);
+    feelingsAPIWorker.onmessage = e => {
+      let calendar = Object.assign({}, state.calendar);
+      let key = Object.keys(e.data)[0];
+      calendar[key] = e.data[key];
+      return store.setState({ calendar: calendar });
+    };
+  },
+  getGalleryPhoto(state) {
+    let url = ps.constructUrl();
+    photoGalleryWorker.postMessage([url]);
+    photoGalleryWorker.onmessage = e => {
+      console.log(e.data);
+      return store.setState({ gallery: e.data });
     };
   }
 });
