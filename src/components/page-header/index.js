@@ -25,7 +25,7 @@ const PageHeader = connect(["selectedDate"], actions)(
     return (
       <header className={style.pageHeader}>
         <button className={style.menu} onClick={toggleNav} />
-        <span>{MONTHS[month]}</span>
+        <span className={style.label}>{MONTHS[month]}</span>
         {/* <button
         className={style.quickAction}
         style={{ backgroundImage: `url(../../assets/${quickAction}.svg)` }}
