@@ -1,37 +1,15 @@
-.panel {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: grid;
-  padding: 10px 30px;
-  align-items: center;
-}
-
-.bg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0.4;
-}
-
 .emojiGrid {
+  width: 100%;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 45px);
   justify-content: center;
   grid-gap: 5px;
   display: grid;
-  padding: 10px 15px;
   border-radius: 1px;
   z-index: 99;
-  box-shadow: 20px 10px 40px 0 rgba(0, 0, 0, 0.5);
   button {
     background: transparent;
     border: none;
-    border-radius: 50%;
     background-size: 35px;
     width: 35px;
     height: 35px;
@@ -41,11 +19,12 @@
     align-self: center;
   }
   .lock {
-    background-color: #474b4e;
+    background-color: #ff5722;
     background-image: url("../../assets/Lock.svg");
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
     background-size: 12px;
     background-position: center;
+    border-radius: 50%;
   }
 }

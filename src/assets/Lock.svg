@@ -11,8 +11,8 @@
             <mask id="mask-2" fill="white">
                 <use xlink:href="#path-1"></use>
             </mask>
-            <use id="Lock-Filled-Icon" fill="#393B43" xlink:href="#path-1"></use>
-            <g id="↳Tint/Grey" mask="url(#mask-2)" fill="#D0D0D0">
+            <use id="Lock-Filled-Icon" fill="#FFFFFF" xlink:href="#path-1"></use>
+            <g id="↳Tint/Grey" mask="url(#mask-2)" fill="#FFFFFF">
                 <rect id="Color" x="0" y="0" width="16" height="16"></rect>
             </g>
         </g>

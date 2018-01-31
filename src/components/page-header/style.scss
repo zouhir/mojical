@@ -16,23 +16,7 @@
     border: none;
     height: 70px;
   }
-  select {
-    padding-left: 10px;
-    background-image: url("../../assets/Drop.svg");
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: right 5px center;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    font-size: 16px;
-    color: #474b4e;
-    border: none;
-    padding-right: 14px;
-    height: 70px;
-  }
-  select::-ms-expand {
-    display: none;
-  }
+
   .quickAction {
     margin-left: auto;
     width: 50px;

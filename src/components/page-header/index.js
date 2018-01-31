@@ -25,20 +25,7 @@ const PageHeader = connect(["selectedDate"], actions)(
     return (
       <header className={style.pageHeader}>
         <button className={style.menu} onClick={toggleNav} />
-        <select
-          name="text"
-          onChange={e => {
-            selectDate({ month: +e.target.value });
-          }}
-        >
-          {MONTHS.map((m, i) => {
-            return (
-              <option value={i + 1} selected={i === month - 1}>
-                {m}
-              </option>
-            );
-          })}
-        </select>
+        <span>{MONTHS[month]}</span>
         {/* <button
         className={style.quickAction}
         style={{ backgroundImage: `url(../../assets/${quickAction}.svg)` }}

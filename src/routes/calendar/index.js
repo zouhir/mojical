@@ -83,9 +83,11 @@ class CalendarPage extends Component {
     let deltaX = endX - startX;
     this.animationParams.deltaX = deltaX;
     if (this.props.selectedDate.month === 1 && deltaX > 0) {
+      this.animationParams.deltaX = null;
       return;
     }
     if (this.props.selectedDate.month === 12 && deltaX < 0) {
+      this.animationParams.deltaX = null;
       return;
     }
     el.style.transition = `transform 0ms ease-out`;
@@ -102,6 +104,12 @@ class CalendarPage extends Component {
     let { transformBasePx, currentTransform } = this.animationParams;
 
     let decrement = deltaX > 0 ? true : false;
+    if (!deltaX) {
+      this.animationParams.deltaX = 0;
+      this.animationParams.dragging = false;
+      this.animationParams.canDragAgain = true;
+      return;
+    }
     if (absDeltaX === 0) {
       this.animationParams.deltaX = 0;
       this.animationParams.dragging = false;
@@ -118,10 +126,10 @@ class CalendarPage extends Component {
         .then(_ => {
           el.style.transition = `transform 0.2s ease-out`;
           el.style.transform = `translateX(${currentTransform}px)`;
-          return transitionEndPromise(this.base);
+          return transitionEndPromise(el);
         })
         .then(_ => {
-          el.style.transition = "";
+          el.style.transition = ``;
           this.animationParams.deltaX = 0;
           this.animationParams.dragging = false;
           this.animationParams.canDragAgain = true;
@@ -137,9 +145,10 @@ class CalendarPage extends Component {
       .then(_ => {
         el.style.transition = `transform 0.2s ease-out`;
         el.style.transform = `translateX(${offset}px)`;
-        return transitionEndPromise(this.base);
+        return transitionEndPromise(el);
       })
       .then(_ => {
+        console.log("dddoonnnnnnnnnnnnnnnnne");
         el.style.transition = "";
         this.animationParams.currentTransform = offset;
         this.animationParams.deltaX = 0;
@@ -155,7 +164,7 @@ class CalendarPage extends Component {
 
   componentWillReceiveProps(newProps) {
     if (this.props.selectedDate.month !== newProps.selectedDate.month) {
-      this.goToCal(newProps.selectedDate.month);
+      //this.goToCal(newProps.selectedDate.month);
     }
   }
 
@@ -166,7 +175,7 @@ class CalendarPage extends Component {
       .then(_ => requestAnimationFramePromise())
       .then(_ => {
         let offset = -(month - 1) * this.animationParams.transformBasePx;
-        carousel.style.transition = `transform 0.1s ease-out`;
+        carousel.style.transition = `transform 0.2s ease-out`;
         carousel.style.transform = `translateX(${offset}px)`;
         this.animationParams.currentTransform = offset;
         return transitionEndPromise(carousel);

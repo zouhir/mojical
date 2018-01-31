@@ -6,8 +6,7 @@ const _FEELINGS = ["happiness", "love", "surprise", "anger", "fear", "sadness"];
 
 const Feelings = ({ color, postFeeling }) => {
   return (
-    <div className={style.panel}>
-      <div className={style.bg} style={{ backgroundColor: color }} />
+    <div>
       <div className={style.emojiGrid} style={{ backgroundColor: color }}>
         {_FEELINGS.map(f => (
           <button
