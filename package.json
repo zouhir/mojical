@@ -24,9 +24,8 @@
     "if-env": "^1.0.0",
     "jest": "^22.0.4",
     "node-sass": "^4.7.2",
-    "preact-cli": "^2.0.0",
+    "preact-cli": "^2.1.1",
     "sass-loader": "^6.0.6",
-    "webpack-jarvis": "^0.1.1",
     "worker-loader": "^1.1.0"
   },
   "dependencies": {
@@ -41,6 +40,6 @@
     "preact-router": "^2.5.5",
     "siema": "^1.4.9",
     "unfetch": "^3.0.0",
-    "unistore": "^3.0.3"
+    "unistore": "^3.0.4"
   }
 }

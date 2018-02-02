@@ -31,6 +31,7 @@ class CalendarPage extends Component {
   };
   componentDidMount() {
     this.registerCalendarEvents();
+    this.goToCal(this.props.selectedDate.month);
   }
 
   registerCalendarEvents = () => {
