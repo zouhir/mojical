@@ -16,7 +16,10 @@ import feelingsService from "../../services/feelings";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
-@connect(["user", "selectedDate", "calendar"], actions)
+@connect(
+  ["user", "selectedMonth", "selectedDay", "selectedYear", "calendar"],
+  actions
+)
 class CalendarPage extends Component {
   state = {
     loading: true
@@ -31,7 +34,7 @@ class CalendarPage extends Component {
   };
   componentDidMount() {
     this.registerCalendarEvents();
-    this.goToCal(this.props.selectedDate.month);
+    this.goToCal(this.props.selectedMonth);
   }
 
   registerCalendarEvents = () => {
@@ -83,11 +86,11 @@ class CalendarPage extends Component {
     let endX = event.clientX || event.touches[0].clientX;
     let deltaX = endX - startX;
     this.animationParams.deltaX = deltaX;
-    if (this.props.selectedDate.month === 1 && deltaX > 0) {
+    if (this.props.selectedMonth === 1 && deltaX > 0) {
       this.animationParams.deltaX = null;
       return;
     }
-    if (this.props.selectedDate.month === 12 && deltaX < 0) {
+    if (this.props.selectedMonth === 12 && deltaX < 0) {
       this.animationParams.deltaX = null;
       return;
     }
@@ -101,7 +104,7 @@ class CalendarPage extends Component {
     let deltaX = this.animationParams.deltaX;
     let absDeltaX = Math.abs(deltaX) || 0;
 
-    let { month } = this.props.selectedDate;
+    let month = this.props.selectedMonth;
     let { transformBasePx, currentTransform } = this.animationParams;
 
     let decrement = deltaX > 0 ? true : false;
@@ -149,7 +152,6 @@ class CalendarPage extends Component {
         return transitionEndPromise(el);
       })
       .then(_ => {
-        console.log("dddoonnnnnnnnnnnnnnnnne");
         el.style.transition = "";
         this.animationParams.currentTransform = offset;
         this.animationParams.deltaX = 0;
@@ -162,12 +164,6 @@ class CalendarPage extends Component {
         }
       });
   };
-
-  componentWillReceiveProps(newProps) {
-    if (this.props.selectedDate.month !== newProps.selectedDate.month) {
-      //this.goToCal(newProps.selectedDate.month);
-    }
-  }
 
   goToCal = month => {
     let carousel = this.base.querySelector("#carousel");
@@ -185,12 +181,11 @@ class CalendarPage extends Component {
 
   postFeeling = feeling => {
     let { uid, authToken } = this.props.user;
-    let { year, month, day } = this.props.selectedDate;
     let feelingObject = { [day]: { feeling } };
     this.props.setFeelinginCalendar({
-      year,
-      month,
-      day,
+      year: this.props.selectedYear,
+      month: this.props.selectedMonth,
+      day: this.props.selectedDay,
       response: feelingObject
     });
     feelingsService

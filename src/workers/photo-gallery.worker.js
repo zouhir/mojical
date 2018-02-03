@@ -1,5 +1,4 @@
 onmessage = function(e) {
-  console.log("Photo gallery worker is getting shit done...");
   fetch(e.data[0], {
     method: "GET",
     headers: {
@@ -8,7 +7,6 @@ onmessage = function(e) {
   })
     .then(r => r.json())
     .then(res => {
-      console.log(res);
       if (res) {
         let random = Math.floor(Math.random() * (res.length - 1)) + 0;
         let pic = res[random];
@@ -20,5 +18,5 @@ onmessage = function(e) {
         });
       }
     })
-    .catch(e => console.log(e));
+    .catch(e => console.error(e));
 };

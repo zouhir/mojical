@@ -19,13 +19,12 @@ const MONTHS = [
   "December"
 ];
 
-const PageHeader = connect(["selectedDate"], actions)(
-  ({ selectDate, toggleNav, selectedDate, goToCal }) => {
-    let { month } = selectedDate;
+const PageHeader = connect(["selectedMonth"], actions)(
+  ({ setDate, toggleNav, selectedMonth, goToCal }) => {
     return (
       <header className={style.pageHeader}>
         <button className={style.menu} onClick={toggleNav} />
-        <span className={style.label}>{MONTHS[month - 1]}</span>
+        <span className={style.label}>{MONTHS[selectedMonth - 1]}</span>
         {/* <button
         className={style.quickAction}
         style={{ backgroundImage: `url(../../assets/${quickAction}.svg)` }}

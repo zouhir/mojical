@@ -5,12 +5,12 @@ import FeelingsPanel from "../feelings-panel";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
-@connect(["gallery", "selectedDate"], actions)
+@connect(["gallery"], actions)
 class TopSection extends Component {
   componentDidMount() {
     this.props.getGalleryPhoto();
   }
-  render({ gallery, selectedDate, postFeeling }) {
+  render({ gallery, postFeeling }) {
     return (
       <div
         className={style.top}

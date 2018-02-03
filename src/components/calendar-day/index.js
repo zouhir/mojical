@@ -2,20 +2,31 @@ import { h, Component } from "preact";
 import cx from "classnames";
 
 import style from "./style.scss";
+import { connect } from "unistore/preact";
+import { actions } from "../../store";
 
+@connect(["today", "selectedMonth", "selectedDay"], actions)
 class Day extends Component {
-  render({ day, month, selectedDate, selectDate, feeling, today }) {
-    let classes = cx(
+  render({
+    day,
+    selectedDay,
+    selectedMonth,
+    currentMonth,
+    selectDay,
+    feeling,
+    today
+  }) {
+    let cls = cx(
       style.day,
       feeling && style.feeling,
-      today && style.today,
-      selectedDate.day === day && selectDate.month === month && style.selected
+      selectedDay === today.day && currentMonth === today.month && style.today,
+      selectedDay === day && selectedMonth === currentMonth && style.selected
     );
     return (
       <button
-        className={classes}
+        className={cls}
         onClick={() => {
-          return selectDate({ day });
+          return selectDay(day);
         }}
         style={
           feeling && {

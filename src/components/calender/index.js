@@ -6,44 +6,44 @@ import Day from "../calendar-day";
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+import { connect } from "unistore/preact";
+import { actions } from "../../store";
+
+@connect(["calendar", "selectedMonth", "selectedDay"], actions)
 class Calendar extends Component {
-  render({ today, selectedDate, selectDate, currentMonthCalendar }) {
+  render({ currentMonth, calendar, renderDays }) {
+    let currentMonthCalendar = calendar[currentMonth];
     return (
       <div className={style.cal}>
         {DAYS.map(d => <div className={style.heading}>{d}</div>)}
-        {Object.keys(currentMonthCalendar).map((d, idx) => {
-          let dayObj = currentMonthCalendar[d];
-          if (idx === 0 && dayObj.day > 0) {
-            let startDay = dayObj.day;
-            let daysArr = [];
-            for (let i = 0; i <= startDay; i++) {
-              i === startDay
-                ? daysArr.push(
-                    <div className={style.cell}>
+        {renderDays &&
+          Object.keys(currentMonthCalendar).map((d, idx) => {
+            let dayObj = currentMonthCalendar[d];
+            if (idx === 0 && dayObj.day > 0) {
+              let startDay = dayObj.day;
+              let daysArr = [];
+              for (let i = 0; i <= startDay; i++) {
+                i === startDay
+                  ? daysArr.push(
                       <Day
                         day={+d}
+                        currentMonth={currentMonth}
                         feeling={dayObj.feeling}
-                        selectedDate={selectedDate}
-                        selectDate={selectDate}
                       />
-                    </div>
-                  )
-                : daysArr.push(<div />);
-            }
-            return daysArr;
-          } else {
-            return (
-              <div className={style.cell}>
+                    )
+                  : daysArr.push(<div />);
+              }
+              return daysArr;
+            } else {
+              return (
                 <Day
+                  currentMonth={currentMonth}
                   day={+d}
                   feeling={currentMonthCalendar[d].feeling || null}
-                  selectedDate={selectedDate}
-                  selectDate={selectDate}
                 />
-              </div>
-            );
-          }
-        })}
+              );
+            }
+          })}
       </div>
     );
   }

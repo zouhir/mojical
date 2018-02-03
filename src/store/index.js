@@ -12,11 +12,9 @@ const photoGalleryWorker = new PhotoGallery();
 let store = createStore({
   user: null,
   today: null,
-  selectedDate: {
-    year: null,
-    month: null,
-    day: null
-  },
+  selectedYear: null,
+  selectedMonth: null,
+  selectedDay: null,
   calendar: {},
   lastSync: {},
   showNav: false,
@@ -25,7 +23,8 @@ let store = createStore({
     artist: null,
     url: null,
     color: null
-  }
+  },
+  loading: false
 });
 
 let actions = store => ({
@@ -44,40 +43,47 @@ let actions = store => ({
     return {
       today: { year, month, day },
       calendar: DateUtils.getYearCalendar(year),
-      selectedDate: { year, month, day: null }
+      selectedYear: year,
+      selectedMonth: month,
+      selectedDay: null
     };
   },
-  selectDate(state, obj) {
-    let toSet = Object.assign({}, state.selectedDate, obj);
-    return { selectedDate: toSet };
+  setDate(state, { day, month, year }) {
+    return { selectedDay: day, selectedMonth: month, selectedYear: year };
   },
-
-  resetDaySelection(state) {
-    let { year, month } = state.selectedDate;
-    return {
-      selectedDate: { year, month, day: null }
-    };
+  selectDay(state, day) {
+    return { selectedDay: day };
+  },
+  selectMonth(state, day) {
+    return { selectedMonth: month };
   },
   decrementMonth(state) {
-    let { year, month } = state.selectedDate;
-    month = month - 1;
+    let year = state.selectedYear;
+    let month = state.selectedMonth;
+    month--;
     this.dispatchFeelingsWorker({ year, month });
     return {
-      selectedDate: { year, month, day: null }
+      selectedMonth: month,
+      selectedDay: null
     };
   },
   incrementMonth(state) {
-    let { year, month } = state.selectedDate;
+    let year = state.selectedYear;
+    let month = state.selectedMonth;
     month = month + 1;
     this.dispatchFeelingsWorker({ year, month });
     if (month <= 12)
       return {
-        selectedDate: { year, month, day: null }
+        selectedMonth: month,
+        selectedDay: null
       };
   },
   postFeeling(state, { feeling }) {
     let { uid, authToken } = state.user;
-    let { year, day, month } = state.selectedDate;
+    let year = state.selectedYear;
+    let month = state.selectedMonth;
+    let day = state.selectedDay;
+
     let url = fs.constructUrl(uid, authToken, year, month);
     let data = {
       [day]: { feeling: feeling }
@@ -100,8 +106,32 @@ let actions = store => ({
   },
 
   dispatchFeelingsWorker(state, { year, month }) {
+    store.setState({ loading: true });
     let { uid, authToken } = state.user;
     let url = fs.constructUrl(uid, authToken, year, month);
+    let calendar = Object.assign({}, state.calendar);
+    if ("caches" in window) {
+      caches.match(url).then(response => {
+        if (response) {
+          console.log("got from cache");
+          response.json().then(json => {
+            if (json) {
+              Object.keys(json).forEach(day => {
+                let dayData = json[day];
+                if (calendar[month][day]) {
+                  calendar[month][day].feeling =
+                    dayData.feeling || calendar[month][day].feeling;
+                  calendar[month][day].location =
+                    dayData.location || calendar.location;
+                }
+              });
+              store.setState({ calendar: calendar });
+            }
+          });
+        }
+      });
+    }
+
     feelingsAPIWorker.postMessage([
       url,
       {
@@ -114,14 +144,13 @@ let actions = store => ({
       let calendar = Object.assign({}, state.calendar);
       let key = Object.keys(e.data)[0];
       calendar[key] = e.data[key];
-      return store.setState({ calendar: calendar });
+      return store.setState({ calendar: calendar, loading: false });
     };
   },
   getGalleryPhoto(state) {
     let url = ps.constructUrl();
     photoGalleryWorker.postMessage([url]);
     photoGalleryWorker.onmessage = e => {
-      console.log(e.data);
       return store.setState({ gallery: e.data });
     };
   }

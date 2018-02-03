@@ -6,36 +6,21 @@ import Calendar from "../calender";
 import { connect } from "unistore/preact";
 import { actions } from "../../store";
 
-@connect(["calendar", "selectedDate"], actions)
+@connect(["calendar", "selectedMonth"], actions)
 class Carousel extends Component {
-  render({ selectedDate, calendar, selectDate }) {
+  render({ selectedMonth, calendar }) {
     return (
       <div id="carousel" className={style.carousel}>
         {Object.keys(calendar).map((mc, idx) => {
-          let selectedMonth = +selectedDate.month;
           let monthToRender = +mc;
           if (
             monthToRender === selectedMonth - 1 ||
             monthToRender === selectedMonth ||
             monthToRender === selectedMonth + 1
           ) {
-            return (
-              <Calendar
-                currentMonthCalendar={calendar[mc]}
-                selectDate={selectDate}
-                selectedDate={selectedDate}
-                key={idx}
-              />
-            );
+            return <Calendar renderDays={true} currentMonth={+mc} key={idx} />;
           }
-          return (
-            <Calendar
-              currentMonthCalendar={{}}
-              selectDate={selectDate}
-              selectedDate={selectedDate}
-              key={idx}
-            />
-          );
+          return <Calendar renderDays={false} currentMonth={+mc} key={idx} />;
         })}
       </div>
     );

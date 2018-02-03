@@ -5,6 +5,7 @@ onmessage = function(e) {
   console.log("Message received from dispatch feelings");
   if (TYPE === "POST") {
     let payload = JSON.stringify(DATA.data);
+    console.log(DATA.data);
     return fetch(URL, {
       method: "PATCH",
       headers: {
@@ -21,11 +22,13 @@ onmessage = function(e) {
         }
         Object.keys(res).forEach(day => {
           let dayData = res[day];
-          currentMonth[day].feeling =
-            dayData.feeling || currentMonth[day].feeling;
-          currentMonth[day].note = dayData.note || currentMonth[day].note;
-          currentMonth[day].location =
-            dayData.location || currentMonth[day].location;
+          if (currentMonth[day]) {
+            currentMonth[day].feeling =
+              dayData.feeling || currentMonth[day].feeling;
+            currentMonth[day].note = dayData.note || currentMonth[day].note;
+            currentMonth[day].location =
+              dayData.location || currentMonth[day].location;
+          }
         });
         postMessage({
           [DATA["month"]]: currentMonth
