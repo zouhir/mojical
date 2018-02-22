@@ -9,6 +9,7 @@ import PageHeader from "../../components/page-header";
 import Carousel from "../../components/calendars-carousel";
 import TopSection from "../../components/top-section";
 
+
 // util
 import feelingsService from "../../services/feelings";
 
@@ -29,8 +30,7 @@ class CalendarPage extends Component {
     dragging: false,
     deltaX: 0,
     transformBasePx: 0,
-    currentTransform: 0,
-    canDragAgain: true
+    currentTransform: 0
   };
   componentDidMount() {
     this.registerCalendarEvents();
@@ -73,7 +73,6 @@ class CalendarPage extends Component {
 
   startDrag = (event, el) => {
     event.stopPropagation();
-    if (!this.animationParams.canDragAgain) return;
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
   };
@@ -81,7 +80,6 @@ class CalendarPage extends Component {
   drag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.dragging) return;
-    this.animationParams.canDragAgain = false;
     let { startX, currentTransform } = this.animationParams;
     let endX = event.clientX || event.touches[0].clientX;
     let deltaX = endX - startX;
@@ -94,8 +92,11 @@ class CalendarPage extends Component {
       this.animationParams.deltaX = null;
       return;
     }
-    el.style.transition = `transform 0ms ease-out`;
-    el.style.transform = `translateX(${deltaX + currentTransform}px)`;
+    return requestAnimationFramePromise().then(_ => {
+      el.style.transition = `transform 0ms ease-out`;
+      el.style.transform = `translateX(${deltaX + currentTransform}px)`;
+    })
+
   };
 
   stopDrag = (event, el) => {
@@ -108,42 +109,17 @@ class CalendarPage extends Component {
     let { transformBasePx, currentTransform } = this.animationParams;
 
     let decrement = deltaX > 0 ? true : false;
-    if (!deltaX) {
+    if (!deltaX || absDeltaX === 0) {
+      this.animationParams.startX = 0;
       this.animationParams.deltaX = 0;
       this.animationParams.dragging = false;
-      this.animationParams.canDragAgain = true;
       return;
-    }
-    if (absDeltaX === 0) {
-      this.animationParams.deltaX = 0;
-      this.animationParams.dragging = false;
-      this.animationParams.canDragAgain = true;
-      return;
-    }
-    if (
-      absDeltaX < 100 ||
-      (decrement && month === 1) ||
-      (!decrement && month === 12)
-    ) {
-      return requestAnimationFramePromise()
-        .then(_ => requestAnimationFramePromise())
-        .then(_ => {
-          el.style.transition = `transform 0.2s ease-out`;
-          el.style.transform = `translateX(${currentTransform}px)`;
-          return transitionEndPromise(el);
-        })
-        .then(_ => {
-          el.style.transition = ``;
-          this.animationParams.deltaX = 0;
-          this.animationParams.dragging = false;
-          this.animationParams.canDragAgain = true;
-        });
     }
     let offset;
     if (decrement) {
-      offset = currentTransform + transformBasePx;
+      offset = absDeltaX < 100 ? currentTransform : currentTransform + transformBasePx;
     } else {
-      offset = currentTransform - transformBasePx;
+      offset = absDeltaX < 100 ? currentTransform : currentTransform - transformBasePx;
     }
     return requestAnimationFramePromise()
       .then(_ => {
@@ -154,14 +130,18 @@ class CalendarPage extends Component {
       .then(_ => {
         el.style.transition = "";
         this.animationParams.currentTransform = offset;
+        this.animationParams.startX = 0;
         this.animationParams.deltaX = 0;
         this.animationParams.dragging = false;
-        this.animationParams.canDragAgain = true;
-        if (decrement) {
+        return requestAnimationFramePromise();
+      }).then(_ => {
+        if (decrement && absDeltaX > 100) {
           return this.props.decrementMonth();
-        } else {
+        }
+        if (absDeltaX > 100) {
           this.props.incrementMonth();
         }
+
       });
   };
 

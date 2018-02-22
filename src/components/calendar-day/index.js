@@ -19,7 +19,7 @@ class Day extends Component {
     let cls = cx(
       style.day,
       feeling && style.feeling,
-      selectedDay === today.day && currentMonth === today.month && style.today,
+      day === today.day && currentMonth === today.month && style.today,
       selectedDay === day && selectedMonth === currentMonth && style.selected
     );
     return (

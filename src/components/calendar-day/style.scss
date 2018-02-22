@@ -1,5 +1,4 @@
 @import "../../style/helpers.scss";
-
 .day {
   align-items: center;
   background: transparent;
@@ -37,11 +36,16 @@
 .feeling {
   background-position: center;
   background-repeat: no-repeat;
+  border-radius: 0;
+  position: relative;
+  &.selected {
+    background-color: transparent;
+  }
   span {
     font-size: 9px;
-    left: -6px;
+    left: -10px;
     opacity: 0.7;
     position: absolute;
-    top: -6px;
+    top: -10px;
   }
 }

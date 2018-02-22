@@ -10,13 +10,15 @@
   @include xs {
     grid-gap: 5px;
   }
-
   @include sm {
     grid-gap: 10px;
   }
-
   @include md {
     grid-gap: 15px;
+  }
+  @include lg {
+    // TODO: make dynamic based on parent hieght
+    padding: 105px 0px;
   }
 }
 

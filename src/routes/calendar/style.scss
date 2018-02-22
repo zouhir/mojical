@@ -1,30 +1,31 @@
 // refactor from CSS to Scss
 @import "../../style/helpers.scss";
 .calendar {
-  width: 100%;
   display: grid;
-  grid-template-columns: 100%;
   grid-template-areas: "header" "top" "bottom";
+  grid-template-columns: 100%;
   grid-template-rows: auto 1fr 350px;
+  height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
+  width: 100%;
   @include md {
     grid-template-rows: auto 1fr 410px;
   }
   @include lg {
-    grid-template-columns: 50% 50%;
     grid-template-areas: "header header" "top bottom";
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 150px 600px 600px;
   }
 }
 
 .top {
-  grid-area: top;
-  position: relative;
   display: grid;
+  grid-area: top;
   justify-items: center;
+  position: relative;
   @include lg {
     padding: 10px 0px 10px 10px;
     justify-items: end;
@@ -33,30 +34,30 @@
 
 .bottom {
   grid-area: bottom;
+  justify-self: center;
+  max-width: 600px;
   padding: 10px 0px 10px 10px;
-  @include md {
-    display: grid;
-    justify-items: start;
-    justify-self: center;
-  }
+  width: 100%;
   .calendarWindow {
-    overflow: hidden;
-    width: 100%;
-    max-width: 600px;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: 100%;
     justify-content: center;
+    max-width: 600px;
+    overflow: hidden;
+    width: 100%;
   }
   @include xs {
     grid-gap: 5px;
   }
-
   @include sm {
     grid-gap: 10px;
   }
-
   @include md {
     grid-gap: 15px;
+  }
+  @include lg {
+    padding: 0;
+    max-width: 100%;
   }
 }
