@@ -1,4 +1,4 @@
-var cacheName = "mojical-1";
+var cacheName = "mojical-2";
 
 var filesToCache = [
   "/assets/emojis/anger.svg",
@@ -11,20 +11,20 @@ var filesToCache = [
 
 var FIREBASE_URL = "mojical-pwa.firebaseio.com";
 
-self.addEventListener("install", function(e) {
+self.addEventListener("install", function (e) {
   e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
+    caches.open(cacheName).then(function (cache) {
       return cache.addAll(filesToCache);
     })
   );
 });
 
-self.addEventListener("activate", function(e) {
+self.addEventListener("activate", function (e) {
   console.log("[ServiceWorker] Activate");
   e.waitUntil(
-    caches.keys().then(function(keyList) {
+    caches.keys().then(function (keyList) {
       return Promise.all(
-        keyList.map(function(key) {
+        keyList.map(function (key) {
           if (key !== cacheName) {
             console.log("[ServiceWorker] Removing old cache", key);
             return caches.delete(key);
@@ -36,7 +36,7 @@ self.addEventListener("activate", function(e) {
   return self.clients.claim();
 });
 
-self.addEventListener("fetch", function(e) {
+self.addEventListener("fetch", function (e) {
   if (e.request.url.indexOf(FIREBASE_URL) > -1) {
     /*
      * When the request URL contains dataUrl, the app is asking for fresh
@@ -46,8 +46,8 @@ self.addEventListener("fetch", function(e) {
      * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
      */
     e.respondWith(
-      caches.open(cacheName).then(function(cache) {
-        return fetch(e.request).then(function(response) {
+      caches.open(cacheName).then(function (cache) {
+        return fetch(e.request).then(function (response) {
           cache.put(e.request.url, response.clone());
           return response;
         });
@@ -60,7 +60,7 @@ self.addEventListener("fetch", function(e) {
      * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
      */
     e.respondWith(
-      caches.match(e.request).then(function(response) {
+      caches.match(e.request).then(function (response) {
         return response || fetch(e.request);
       })
     );

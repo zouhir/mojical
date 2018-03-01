@@ -1,0 +1,24 @@
+.notification {
+  height: 50px;
+  background: rgba(0, 0, 0, 0.80);
+  box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.20);
+  color: #232627;
+  font-size: 16px;
+  line-height: 20px;
+  position: fixed;
+  left: 0;
+  top: 100px;
+  border-left: solid 15px #2196F3;
+  color: #FFF;
+  align-items: center;
+  display: flex;
+  padding-left: 14px;
+  width: 85%;
+  z-index: 999;
+  .link {
+    padding-left: 5px;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #2196F3;
+  }
+}

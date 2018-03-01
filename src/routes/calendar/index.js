@@ -177,7 +177,7 @@ class CalendarPage extends Component {
   render({ calendar }) {
     return (
       <div className={style.calendar}>
-        <PageHeader />
+        <PageHeader goToCal={this.goToCal} />
         <div className={style.top}>
           <TopSection />
         </div>

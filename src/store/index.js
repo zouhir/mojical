@@ -24,7 +24,11 @@ let store = createStore({
     url: null,
     color: null
   },
-  loading: false
+  loading: false,
+  notification: {
+    type: null,
+    message: null
+  }
 });
 
 let actions = store => ({
@@ -54,7 +58,7 @@ let actions = store => ({
   selectDay(state, day) {
     return { selectedDay: day };
   },
-  selectMonth(state, day) {
+  selectMonth(state, month) {
     return { selectedMonth: month };
   },
   decrementMonth(state) {
@@ -153,7 +157,21 @@ let actions = store => ({
     photoGalleryWorker.onmessage = e => {
       return store.setState({ gallery: e.data });
     };
+  },
+  notify(state, { type, message }) {
+    return {
+      notification: { type, message }
+    };
+  },
+  hideNotification(state) {
+    return {
+      notification: {
+        type: null,
+        message: null
+      }
+    };
   }
+
 });
 
 export { store, actions };

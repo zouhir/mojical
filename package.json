@@ -25,7 +25,10 @@
     "jest": "^22.0.4",
     "node-sass": "^4.7.2",
     "preact-cli": "^2.1.1",
+    "puppeteer": "^1.1.1",
     "sass-loader": "^6.0.6",
+    "webpack-bundle-analyzer": "^2.11.0",
+    "webpack-jarvis": "^0.3.0",
     "worker-loader": "^1.1.0"
   },
   "dependencies": {
@@ -38,6 +41,7 @@
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "preact-router": "^2.5.5",
+    "react-stripe-elements": "^1.4.1",
     "siema": "^1.4.9",
     "unfetch": "^3.0.0",
     "unistore": "^3.0.4"

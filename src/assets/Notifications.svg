@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/Notifications</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14.9942976,14 L9.99621986,14 C9.99621986,15.1045695 9.10113361,16 7.99698876,16 C6.89284392,16 5.99775767,15.1045695 5.99775767,14 L0.999679937,14 C0.569415009,14 0.18742308,13.7245699 0.0513613632,13.3162278 C-0.0847003537,12.9078856 0.0556986666,12.4582582 0.399910609,12.2 C1.41050207,11.4470922 2.00577605,10.2605359 2.00529318,9 L2.00529318,6 C2.00529318,2.6862915 4.69055192,0 8.00298646,0 C11.315421,0 14.0006797,2.6862915 14.0006797,6 L14.0006797,9 C13.9971949,10.2598496 14.5904815,11.4468792 15.6000646,12.2 C15.9451756,12.4589165 16.0853263,12.9100991 15.9476864,13.3190877 C15.8100465,13.7280763 15.4256688,14.0025997 14.9942976,14 L14.9942976,14 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/Notifications">
+            <g id="↳Tint/Grey">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#000000" xlink:href="#path-1"></use>
+                <g mask="url(#mask-2)" fill="#D0D0D0" id="Color">
+                    <g transform="translate(-292.000000, -292.000000)">
+                        <rect x="0" y="0" width="600" height="600"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

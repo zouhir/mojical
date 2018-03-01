@@ -19,16 +19,22 @@ const MONTHS = [
   "December"
 ];
 
-const PageHeader = connect(["selectedMonth"], actions)(
-  ({ setDate, toggleNav, selectedMonth, goToCal }) => {
+const PageHeader = connect(["today", "selectedMonth"], actions)(
+  ({ today, setDate, toggleNav, selectedMonth, goToCal, selectDay, selectMonth }) => {
     return (
       <header className={style.pageHeader}>
         <button className={style.menu} onClick={toggleNav} />
         <span className={style.label}>{MONTHS[selectedMonth - 1]}</span>
-        {/* <button
-        className={style.quickAction}
-        style={{ backgroundImage: `url(../../assets/${quickAction}.svg)` }}
-      /> */}
+        <button
+          className={style.quickAction}
+          style={{ backgroundImage: `url(../../assets/Calendar.svg)` }}
+          onClick={() => {
+            console.log(today);
+            goToCal(today.month);
+            selectMonth(today.month);
+            selectDay(today.day);
+          }}
+        />
       </header>
     );
   }

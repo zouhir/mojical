@@ -18,6 +18,7 @@ class TopSection extends Component {
           backgroundImage: `url(${gallery.src})`
         }}
       >
+
         <div className={style.feelingsPanel} style={{ opacity: selectedDay ? 1 : 0 }} >
           <FeelingsPanel postFeeling={postFeeling} />
         </div>
