@@ -38,7 +38,15 @@
   max-width: 600px;
   padding: 10px 0px 10px 10px;
   width: 100%;
+  overflow: hidden;
   .calendarWindow {
+    height: 365px;
+    @include md {
+      height: 415px;
+    }
+    @include lg {
+      height: 615px;
+    }
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -46,6 +54,13 @@
     max-width: 600px;
     overflow: hidden;
     width: 100%;
+    overflow-x: auto;
+    scroll-snap-coordinate: 0 0;
+    scroll-snap-points-x: repeat(100%);
+    scroll-snap-type: mandatory;
+    white-space: nowrap;
+    //scroll-snap-destination: 600px 0;
+    font-size: 0;
   }
   @include xs {
     grid-gap: 5px;

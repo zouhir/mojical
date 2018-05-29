@@ -1,6 +1,7 @@
 @import "../../style/helpers.scss";
 .cal {
   display: grid;
+  width: 600px;
   background: #fff;
   grid-template-columns: repeat(7, 40px);
   grid-template-rows: repeat(7, 40px);

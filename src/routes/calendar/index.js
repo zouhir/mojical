@@ -9,7 +9,6 @@ import PageHeader from "../../components/page-header";
 import Carousel from "../../components/calendars-carousel";
 import TopSection from "../../components/top-section";
 
-
 // util
 import feelingsService from "../../services/feelings";
 
@@ -23,18 +22,26 @@ import { actions } from "../../store";
 )
 class CalendarPage extends Component {
   state = {
-    loading: true
+    loading: true,
+    carouselSnapPoints: [],
+    threshold: 50
   };
   animationParams = {
     startX: 0,
     dragging: false,
-    deltaX: 0,
-    transformBasePx: 0,
-    currentTransform: 0
+    deltaX: 0
   };
   componentDidMount() {
-    this.registerCalendarEvents();
+    //this.registerCalendarEvents();
     this.goToCal(this.props.selectedMonth);
+    let paddedCalendarEl = this.base.querySelector("#paddedCal");
+    let calWidth = paddedCalendarEl.offsetWidth;
+    let carouselSnapPoints = [];
+    for (let i = 0; i < 12; i++) {
+      carouselSnapPoints.push(i * calWidth);
+    }
+    console.log(carouselSnapPoints);
+    this.setState({ carouselSnapPoints, calWidth });
   }
 
   registerCalendarEvents = () => {
@@ -72,17 +79,24 @@ class CalendarPage extends Component {
   };
 
   startDrag = (event, el) => {
+    event.preventDefault();
     event.stopPropagation();
+    if (this.animationParams.dragging === true) {
+      console.log("YOUUUUUUUUUUUU AREEEEEEEEEEE DRAGINGGGGGGGGGGGGGGGG");
+    }
     this.animationParams.dragging = true;
     this.animationParams.startX = event.clientX || event.touches[0].clientX;
+    console.log("START", "drag started");
   };
 
   drag = (event, el) => {
-    event.stopPropagation();
+    event.preventDefault();
     if (!this.animationParams.dragging) return;
-    let { startX, currentTransform } = this.animationParams;
+    let { startX } = this.animationParams;
     let endX = event.clientX || event.touches[0].clientX;
     let deltaX = endX - startX;
+    let { carouselSnapPoints } = this.state;
+    let monthIdx = +this.props.selectedMonth - 1;
     this.animationParams.deltaX = deltaX;
     if (this.props.selectedMonth === 1 && deltaX > 0) {
       this.animationParams.deltaX = null;
@@ -93,55 +107,62 @@ class CalendarPage extends Component {
       return;
     }
     return requestAnimationFramePromise().then(_ => {
-      el.style.transition = `transform 0ms ease-out`;
-      el.style.transform = `translateX(${deltaX + currentTransform}px)`;
-    })
-
+      el.style.transition = "";
+      el.style.transform = `translateX(${deltaX -
+        carouselSnapPoints[monthIdx]}px)`;
+    });
   };
 
   stopDrag = (event, el) => {
     event.stopPropagation();
     if (!this.animationParams.dragging) return;
     let deltaX = this.animationParams.deltaX;
-    let absDeltaX = Math.abs(deltaX) || 0;
-
-    let month = this.props.selectedMonth;
-    let { transformBasePx, currentTransform } = this.animationParams;
-
+    let absDeltaX = Math.abs(deltaX) || 1;
+    let { calWidth, carouselSnapPoints } = this.state;
+    let threshold = calWidth / 3;
     let decrement = deltaX > 0 ? true : false;
-    if (!deltaX || absDeltaX === 0) {
-      this.animationParams.startX = 0;
-      this.animationParams.deltaX = 0;
-      this.animationParams.dragging = false;
-      return;
+    let monthIdx = +this.props.selectedMonth - 1;
+    if (!deltaX || absDeltaX === 0 || absDeltaX < threshold) {
+      console.log("STOP", "cancelled draf");
+      return requestAnimationFramePromise()
+        .then(_ => {
+          console.log("STOP", "0");
+          console.log("STOP", absDeltaX);
+          return requestAnimationFramePromise();
+        })
+        .then(_ => {
+          el.style.transition = `transform 0.2s ease-out`;
+          el.style.transform = `translateX(${-carouselSnapPoints[monthIdx]}px)`;
+          console.log("STOP", "1");
+          return transitionEndPromise(el);
+        })
+        .then(_ => {
+          this.animationParams.dragging = false;
+          el.style.transition = ``;
+          console.log("STOP", "DONT CHAAAAAAAAAAAAAANGE");
+        });
     }
-    let offset;
-    if (decrement) {
-      offset = absDeltaX < 100 ? currentTransform : currentTransform + transformBasePx;
-    } else {
-      offset = absDeltaX < 100 ? currentTransform : currentTransform - transformBasePx;
-    }
+
     return requestAnimationFramePromise()
       .then(_ => {
+        if (decrement) {
+          monthIdx = monthIdx - 1;
+        } else {
+          monthIdx = monthIdx + 1;
+        }
         el.style.transition = `transform 0.2s ease-out`;
-        el.style.transform = `translateX(${offset}px)`;
+        el.style.transform = `translateX(${-carouselSnapPoints[monthIdx]}px)`;
         return transitionEndPromise(el);
       })
       .then(_ => {
+        console.log("transion done");
         el.style.transition = "";
-        this.animationParams.currentTransform = offset;
-        this.animationParams.startX = 0;
-        this.animationParams.deltaX = 0;
         this.animationParams.dragging = false;
-        return requestAnimationFramePromise();
-      }).then(_ => {
-        if (decrement && absDeltaX > 100) {
+        el.style.transition = ``;
+        if (decrement) {
           return this.props.decrementMonth();
         }
-        if (absDeltaX > 100) {
-          this.props.incrementMonth();
-        }
-
+        this.props.incrementMonth();
       });
   };
 

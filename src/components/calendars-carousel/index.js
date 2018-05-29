@@ -12,15 +12,7 @@ class Carousel extends Component {
     return (
       <div id="carousel" className={style.carousel}>
         {Object.keys(calendar).map((mc, idx) => {
-          let monthToRender = +mc;
-          if (
-            monthToRender === selectedMonth - 1 ||
-            monthToRender === selectedMonth ||
-            monthToRender === selectedMonth + 1
-          ) {
-            return <Calendar renderDays={true} currentMonth={+mc} key={idx} />;
-          }
-          return <Calendar renderDays={false} currentMonth={+mc} key={idx} />;
+          return <Calendar renderDays={true} currentMonth={+mc} key={idx} />;
         })}
       </div>
     );

@@ -1,7 +1,9 @@
 .carousel {
-  display: grid;
-  grid-template-columns: repeat(12, 100%);
-  transform: translateX(0);
-  will-change: transform;
-  align-content: center;
+  width: 7200px;
+  //grid-template-columns: repeat(12, 100%);
+  // transform: translateX(0);
+  // will-change: transform;
+  //align-content: center;
+  display: flex;
+  flex-wrap: nowrap;
 }
